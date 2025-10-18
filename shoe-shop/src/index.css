@@ -1,0 +1,32 @@
+/* ใช้ Google Font เพื่อความสวยงาม */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+
+:root {
+  --primary-color: #fde047; /* สีเหลือง */
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-color: #ffffff;
+  --text-secondary-color: #a0a0a0;
+  --sale-color: #ef4444; /* สีแดงสำหรับป้ายลดราคา */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--background-color);
+  background-image: url('/images/bg1.jpg'); /* background image */
+  background-size: cover;
+  background-attachment: fixed;
+  color: var(--text-color);
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
