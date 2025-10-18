@@ -1,0 +1,13 @@
+.badges-section {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 2rem 0;
+    text-align: center;
+    border-top: 1px solid #333; border-bottom: 1px solid #333;
+}
+.badge {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.5rem; color: var(--text-secondary-color);
+}
+.badge svg {
+    color: var(--primary-color);
+}
