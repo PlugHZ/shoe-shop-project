@@ -1,0 +1,119 @@
+.footer {
+  background-color: #1a1a1a;
+  color: #a0a0a0;
+  /* ลด Padding ด้านบนลงเพื่อให้เตี้ยลง */
+  padding: 2.5rem 0 1rem 0; 
+  font-size: 0.85rem; /* ลดขนาดฟอนต์พื้นฐานทั้งหมด */
+  border-top: 1px solid #333;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem; /* ลดช่องว่างระหว่างคอลัมน์ */
+  margin-bottom: 2rem; /* ลดระยะห่างก่อนถึง copyright */
+}
+
+.footer-column:first-child {
+  grid-column: span 2;
+}
+
+/* --- Responsive Breakpoints --- */
+@media (max-width: 992px) {
+  .footer-container { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .footer-container { grid-template-columns: repeat(2, 1fr); }
+  .footer-column:first-child { grid-column: span 2; }
+}
+@media (max-width: 576px) {
+  .footer-container { grid-template-columns: 1fr; }
+  .footer-column:first-child { grid-column: span 1; }
+}
+/* --- End Responsive --- */
+
+.footer-column h3 {
+  color: var(--text-color);
+  margin-bottom: 1rem; /* ลดระยะห่างใต้หัวข้อ */
+  font-size: 0.9rem; /* ลดขนาดฟอนต์หัวข้อ */
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 0.5rem; /* ลดระยะห่างระหว่างรายการ */
+}
+
+.footer-column a {
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-column a:hover {
+  color: var(--primary-color);
+}
+
+.footer-logo {
+  max-width: 70px; /* ลดขนาดโลโก้ */
+  margin-bottom: 1rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* ลดช่องว่างระหว่างไอคอนกับข้อความ */
+  margin-bottom: 0.75rem;
+}
+
+.contact-item svg {
+  color: var(--primary-color);
+  font-size: 1.1rem; /* ลดขนาดไอคอนติดต่อ */
+}
+
+.contact-item span {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.payment-icons,
+.social-icons {
+  display: flex;
+  gap: 0.75rem; /* ลดช่องว่างระหว่างไอคอน */
+  align-items: center;
+}
+
+.payment-icons svg {
+  font-size: 24px; /* กำหนดขนาดไอคอนชำระเงิน */
+}
+
+.social-icons svg {
+  font-size: 20px; /* กำหนดขนาดไอคอนโซเชียล */
+}
+
+.social-icons a svg {
+  color: #a0a0a0;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover svg {
+  color: var(--primary-color);
+}
+
+.social-title {
+  margin-top: 1.5rem;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem; /* ลดระยะห่าง */
+  padding-top: 1rem;
+  border-top: 1px solid #333;
+  font-size: 0.8rem;
+  color: #718096;
+}
