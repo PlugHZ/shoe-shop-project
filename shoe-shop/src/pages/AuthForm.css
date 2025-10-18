@@ -1,0 +1,129 @@
+/* --- Main Page Layout --- */
+.auth-page { /* เปลี่ยนจาก .login-page */
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- Image Section (Left Side) --- */
+.auth-image-section { /* เปลี่ยนจาก .login-image-section */
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+}
+
+/* --- Specific background images for each page --- */
+.login-bg {
+  background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070');
+}
+
+.signup-bg {
+  background-image: url('https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=1974');
+}
+
+
+/* --- Form Section (Right Side) --- */
+.auth-form-section { /* เปลี่ยนจาก .login-form-section */
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f7f6;
+}
+
+/* --- Form Container --- */
+.auth-container { /* เปลี่ยนจาก .login-container */
+  width: 100%;
+  max-width: 400px;
+  padding: 2.5rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.auth-container h2 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #333;
+}
+
+.auth-container p {
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+/* --- Form Groups (Label + Input) --- */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* --- Error Message --- */
+.error-message {
+  color: #d93025;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* --- Submit Button --- */
+.auth-button { /* เปลี่ยนจาก .login-button */
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+/* --- Bottom Link --- */
+.bottom-link { /* เปลี่ยนจาก .signup-link */
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.bottom-link a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.bottom-link a:hover {
+  text-decoration: underline;
+}

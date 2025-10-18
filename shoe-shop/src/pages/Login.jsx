@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import hook ของเรา
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './AuthForm.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth(); // ดึงฟังก์ชัน login มาจาก Context
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -14,7 +15,7 @@ const Login = () => {
     setError('');
     try {
       await login(email, password);
-      navigate('/'); // กลับไปหน้าแรกหลังล็อกอินสำเร็จ
+      navigate('/');
     } catch (err) {
       setError('Failed to log in. Please check your email and password.');
       console.error("Failed to log in:", err);
@@ -22,16 +23,54 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Log In</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>Email</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Log In</button>
-      </form>
+    <div className="auth-page">
+      <div className="auth-image-section login-bg">
+        {/* รูปภาพ */}
+      </div>
+      <div className="auth-form-section">
+        <div className="auth-container">
+          <h2>Welcome Back!</h2>
+          <p>Log in to your shoe shop account</p>
+          
+          <form onSubmit={handleSubmit}>
+            {/* ----- เริ่มส่วนที่แก้ไข ----- */}
+
+            {error && <p className="error-message">{error}</p>}
+
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+              />
+            </div>
+
+            {/* ----- จบส่วนที่แก้ไข ----- */}
+            
+            <button type="submit" className="auth-button">Log In</button>
+          </form>
+
+          <div className="bottom-link">
+            Don't have an account? <Link to="/signup">Sign Up</Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

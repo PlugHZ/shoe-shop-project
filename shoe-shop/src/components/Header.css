@@ -9,7 +9,11 @@
   align-items: center;
 }
 .logo {
-  font-size: 1.8rem; font-weight: bold; color: var(--primary-color);
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  text-decoration: none; /* เอาขีดเส้นใต้ออก */
+  
 }
 .main-nav ul {
   list-style: none; display: flex; gap: 2rem;

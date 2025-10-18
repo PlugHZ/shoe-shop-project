@@ -1,0 +1,106 @@
+/* Container หลักของ Dropdown */
+.profile-dropdown-container {
+  position: relative; /* สำคัญมากสำหรับตำแหน่งของเมนู */
+}
+
+/* ปุ่มไอคอน (ที่ครอบ FiUser) */
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white; /* สีไอคอน */
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s ease-in-out;
+}
+
+.icon-button:hover {
+  color: #f0b90b; /* สีไอคอนตอน hover */
+}
+
+/* กล่องเมนู Dropdown */
+.dropdown-menu {
+  position: absolute;
+  top: 150%;
+  right: -100px; /* <<< เริ่มจากกึ่งกลาง */
+  
+  width: 280px;
+  background-color: #212121; /* สีพื้นหลัง */
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  z-index: 100;
+  text-align: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ปุ่มและ Link ภายในเมนู */
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 0.5rem 0;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  border: 1px solid #f0b90b;
+  background-color: #f0b90b; /* ปุ่มหลักสีทอง */
+  color: #1a1a1a;
+  cursor: pointer;
+}
+
+.dropdown-item.alt {
+  background-color: transparent; /* ปุ่มรองพื้นหลังโปร่งใส */
+  color: #f0b90b;
+}
+
+.dropdown-item:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.dropdown-item.alt:hover {
+  background-color: rgba(240, 185, 11, 0.1);
+}
+
+/* ข้อความคั่น */
+.separator {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  margin: 1.2rem 0;
+  line-height: 1.5;
+}
+
+/* ส่วนแสดงข้อมูล User ที่ล็อกอินแล้ว */
+.user-info {
+  color: #ccc;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #444;
+}
+
+.user-info strong {
+  color: #fff;
+}
+
+/* ปุ่ม Logout */
+.dropdown-item.logout {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+  color: white;
+}
+
+/* Animation ตอนเปิดเมนู */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
