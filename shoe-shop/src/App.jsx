@@ -1,14 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-// 1. Import AuthProvider เข้ามา
 import { AuthProvider } from './context/AuthContext'; 
-
 import Header from './components/Header';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Footer from './components/Footer';
+import ProductDetail from './pages/ProductDetail';
 
 function App() {
   return (
@@ -23,6 +21,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
           </Routes>
         </main>
 

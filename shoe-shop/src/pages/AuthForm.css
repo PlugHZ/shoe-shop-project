@@ -1,5 +1,5 @@
 /* --- Main Page Layout --- */
-.auth-page { /* เปลี่ยนจาก .login-page */
+.auth-page { 
   display: flex;
   height: 100vh;
   width: 100%;
@@ -7,7 +7,7 @@
 }
 
 /* --- Image Section (Left Side) --- */
-.auth-image-section { /* เปลี่ยนจาก .login-image-section */
+.auth-image-section { 
   flex: 1;
   background-size: cover;
   background-position: center;
@@ -24,7 +24,7 @@
 
 
 /* --- Form Section (Right Side) --- */
-.auth-form-section { /* เปลี่ยนจาก .login-form-section */
+.auth-form-section { 
   flex: 1;
   display: flex;
   justify-content: center;
@@ -33,7 +33,7 @@
 }
 
 /* --- Form Container --- */
-.auth-container { /* เปลี่ยนจาก .login-container */
+.auth-container { 
   width: 100%;
   max-width: 400px;
   padding: 2.5rem;
@@ -93,7 +93,7 @@
 }
 
 /* --- Submit Button --- */
-.auth-button { /* เปลี่ยนจาก .login-button */
+.auth-button { 
   width: 100%;
   padding: 15px;
   border: none;
@@ -112,7 +112,7 @@
 }
 
 /* --- Bottom Link --- */
-.bottom-link { /* เปลี่ยนจาก .signup-link */
+.bottom-link { 
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: #555;

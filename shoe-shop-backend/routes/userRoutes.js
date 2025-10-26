@@ -13,22 +13,6 @@ router.post('/', (req, res) => {
 
   const sql = "INSERT INTO users (email, firebase_uid, role) VALUES (?, ?, 'customer')";
   const values = [email, firebase_uid];
-  // GET /api/users/:uid - ดึงข้อมูลผู้ใช้คนเดียว
-router.get('/:uid', (req, res) => {
-  const { uid } = req.params;
-  const sql = "SELECT id, email, role FROM users WHERE firebase_uid = ?";
-
-  db.query(sql, [uid], (err, results) => {
-    if (err) {
-      console.error("Error fetching user:", err);
-      return res.status(500).json({ error: "Failed to fetch user" });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.json(results[0]);
-  });
-});
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -40,6 +24,26 @@ router.get('/:uid', (req, res) => {
       return res.status(500).json({ error: "Failed to create user in database" });
     }
     res.status(201).json({ message: "User created successfully", userId: result.insertId });
+  });
+}); // <-- จุดสิ้นสุดของ router.post
+
+// GET /api/users/:uid - ดึงข้อมูลผู้ใช้คนเดียว
+// (ย้ายมาไว้ตรงนี้ ให้อยู่ระดับนอกสุด)
+router.get('/:uid', (req, res) => {
+  const { uid } = req.params;
+  const sql = "SELECT id, email, role FROM users WHERE firebase_uid = ?";
+
+  db.query(sql, [uid], (err, results) => {
+    if (err) {
+      console.error("Error fetching user:", err);
+      return res.status(500).json({ error: "Failed to fetch user" });
+    }
+    if (results.length === 0) {
+      // ตรงนี้สำคัญมาก ถ้าหา user ไม่เจอ ต้องส่ง 404
+      return res.status(404).json({ error: "User not found" }); 
+    }
+    // ถ้าเจอ user ให้ส่งข้อมูล JSON กลับไป
+    res.json(results[0]); 
   });
 });
 

@@ -33,7 +33,6 @@ const Login = () => {
           <p>Log in to your shoe shop account</p>
           
           <form onSubmit={handleSubmit}>
-            {/* ----- เริ่มส่วนที่แก้ไข ----- */}
 
             {error && <p className="error-message">{error}</p>}
 
@@ -61,7 +60,7 @@ const Login = () => {
               />
             </div>
 
-            {/* ----- จบส่วนที่แก้ไข ----- */}
+           
             
             <button type="submit" className="auth-button">Log In</button>
           </form>

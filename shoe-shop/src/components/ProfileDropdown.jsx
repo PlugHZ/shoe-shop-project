@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext'; // ต้องมี AuthContext นะครับ
+import { useAuth } from '../context/AuthContext'; 
 import './ProfileDropdown.css';
 
 const ProfileDropdown = () => {

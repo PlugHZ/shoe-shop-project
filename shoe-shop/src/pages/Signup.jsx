@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'; 
-import './AuthForm.css'; // Import ไฟล์ CSS กลาง
+import './AuthForm.css'; 
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // State สำหรับยืนยันรหัสผ่าน
+  const [confirmPassword, setConfirmPassword] = useState(''); 
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -21,11 +21,11 @@ const Signup = () => {
     }
     
     try {
-      // 1. สร้าง User ใน Firebase Authentication
+      // สร้าง User ใน Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // 2. ส่งข้อมูล User ไปบันทึกที่ Backend
+      //  ส่งข้อมูล User ไปบันทึกที่ Backend
       await fetch('http://localhost:3001/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -35,11 +35,11 @@ const Signup = () => {
         }),
       });
 
-      // 3. ไปที่หน้าแรกหลังจากสมัครสำเร็จ
+      //  ไปที่หน้าแรกหลังจากสมัครสำเร็จ
       navigate('/');
 
     } catch (err) {
-      // แปลง error message ของ Firebase ให้อ่านง่ายขึ้น
+      
       if (err.code === 'auth/email-already-in-use') {
         setError('This email address is already in use.');
       } else if (err.code === 'auth/weak-password') {

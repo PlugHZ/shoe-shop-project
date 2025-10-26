@@ -1,24 +1,23 @@
 .footer {
   background-color: #1a1a1a;
   color: #a0a0a0;
-  /* ลด Padding ด้านบนลงเพื่อให้เตี้ยลง */
   padding: 2.5rem 0 1rem 0; 
-  font-size: 0.85rem; /* ลดขนาดฟอนต์พื้นฐานทั้งหมด */
+  font-size: 0.85rem; 
   border-top: 1px solid #333;
 }
 
 .footer-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1.5rem; /* ลดช่องว่างระหว่างคอลัมน์ */
-  margin-bottom: 2rem; /* ลดระยะห่างก่อนถึง copyright */
+  gap: 1.5rem; 
+  margin-bottom: 2rem; 
 }
 
 .footer-column:first-child {
   grid-column: span 2;
 }
 
-/* --- Responsive Breakpoints --- */
+
 @media (max-width: 992px) {
   .footer-container { grid-template-columns: repeat(3, 1fr); }
 }
@@ -30,12 +29,11 @@
   .footer-container { grid-template-columns: 1fr; }
   .footer-column:first-child { grid-column: span 1; }
 }
-/* --- End Responsive --- */
 
 .footer-column h3 {
   color: var(--text-color);
-  margin-bottom: 1rem; /* ลดระยะห่างใต้หัวข้อ */
-  font-size: 0.9rem; /* ลดขนาดฟอนต์หัวข้อ */
+  margin-bottom: 1rem; 
+  font-size: 0.9rem; 
   font-weight: 500;
   text-transform: uppercase;
 }
@@ -46,7 +44,7 @@
 }
 
 .footer-column ul li {
-  margin-bottom: 0.5rem; /* ลดระยะห่างระหว่างรายการ */
+  margin-bottom: 0.5rem; 
 }
 
 .footer-column a {
@@ -60,20 +58,20 @@
 }
 
 .footer-logo {
-  max-width: 70px; /* ลดขนาดโลโก้ */
+  max-width: 70px; 
   margin-bottom: 1rem;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* ลดช่องว่างระหว่างไอคอนกับข้อความ */
+  gap: 0.75rem; 
   margin-bottom: 0.75rem;
 }
 
 .contact-item svg {
   color: var(--primary-color);
-  font-size: 1.1rem; /* ลดขนาดไอคอนติดต่อ */
+  font-size: 1.1rem; 
 }
 
 .contact-item span {
@@ -84,16 +82,16 @@
 .payment-icons,
 .social-icons {
   display: flex;
-  gap: 0.75rem; /* ลดช่องว่างระหว่างไอคอน */
+  gap: 0.75rem; 
   align-items: center;
 }
 
 .payment-icons svg {
-  font-size: 24px; /* กำหนดขนาดไอคอนชำระเงิน */
+  font-size: 24px; 
 }
 
 .social-icons svg {
-  font-size: 20px; /* กำหนดขนาดไอคอนโซเชียล */
+  font-size: 20px; 
 }
 
 .social-icons a svg {
@@ -111,7 +109,7 @@
 
 .footer-bottom {
   text-align: center;
-  margin-top: 2rem; /* ลดระยะห่าง */
+  margin-top: 2rem; 
   padding-top: 1rem;
   border-top: 1px solid #333;
   font-size: 0.8rem;

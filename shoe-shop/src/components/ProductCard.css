@@ -1,27 +1,26 @@
-/* ProductCard.css */
 
 .product-card {
-  background-color: #1e1e1e; /* พื้นหลังการ์ดสีดำเข้ม */
+  background-color: #1e1e1e; 
   border-radius: 12px;
-  overflow: hidden; /* ทำให้ขอบรูปภาพโค้งมนตามการ์ด */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ดูมีมิติ */
+  overflow: hidden; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
   transition: transform 0.2s ease-in-out;
-  height: 100%; /* สำคัญ: ทำให้การ์ดสูงเท่ากัน */
+  height: 100%; 
   display: flex;
   flex-direction: column;
 }
 
 .product-card:hover {
-  transform: translateY(-5px); /* ยกการ์ดขึ้นเล็กน้อยเมื่อ Hover */
+  transform: translateY(-5px); 
 }
 
 .product-image-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 100%; /* สร้างสี่เหลี่ยมจัตุรัสสำหรับรูปภาพ */
+  padding-bottom: 100%; 
   overflow: hidden;
-  background-color: white; /* พื้นหลังสีขาวสำหรับรูปภาพ */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* เส้นแบ่งจางๆ */
+  background-color: white; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
 }
 
 .product-image {
@@ -30,15 +29,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* ทำให้รูปภาพพอดีโดยไม่ถูกตัดและยังคงสัดส่วน */
-  padding: 10px; /* เพิ่ม padding รอบรูปภาพเล็กน้อย */
+  object-fit: contain; 
+  padding: 10px; 
 }
 
 .sale-badge {
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: var(--sale-color); /* สีแดงจาก root */
+  background-color: var(--sale-color); 
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -49,39 +48,42 @@
 
 .product-info {
   padding: 15px;
-  text-align: left; /* จัดข้อความชิดซ้าย */
-  flex-grow: 1; /* ทำให้ข้อมูลขยายเต็มพื้นที่ที่เหลือ */
+  text-align: left; 
+  flex-grow: 1; 
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* จัดแบรนด์/ชื่อ/ราคา ให้กระจายตัว */
+  justify-content: space-between; 
 }
 
 .product-brand {
   font-size: 0.85rem;
-  color: var(--text-secondary-color); /* สีเทาอ่อน */
-  text-transform: uppercase; /* ตัวพิมพ์ใหญ่ */
+  color: var(--text-secondary-color); 
+  text-transform: uppercase; 
   margin-bottom: 5px;
-  letter-spacing: 0.5px; /* เพิ่มระยะห่างตัวอักษรเล็กน้อย */
+  letter-spacing: 0.5px; 
 }
 
 .product-name {
   font-size: 1.1rem;
-  color: var(--text-color); /* สีขาว */
+  color: var(--text-color); 
   font-weight: 500;
   line-height: 1.3;
   margin-bottom: 10px;
-  /* ถ้าชื่อยาวเกินให้ตัดแล้วมี ... */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* แสดงได้สูงสุด 2 บรรทัด */
-  line-clamp: 2; /* แสดงได้สูงสุด 2 บรรทัด (มาตรฐาน) */
+  -webkit-line-clamp: 2; 
+  line-clamp: 2; 
   -webkit-box-orient: vertical;
 }
 
 .product-price {
   font-size: 1.3rem;
-  color: var(--primary-color); /* สีเหลือง */
+  color: var(--primary-color); 
   font-weight: 700;
   margin-top: auto; /* ดันราคาลงไปด้านล่างสุดของการ์ด */
+}
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
 }

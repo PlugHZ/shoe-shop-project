@@ -9,8 +9,6 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-container container">
-
-        {/* 2. เปลี่ยน h1 เป็น <Link> และใส่ to="/" */}
         <Link to="/" className="logo">CPE SHOP</Link>
 
         <nav className="main-nav">

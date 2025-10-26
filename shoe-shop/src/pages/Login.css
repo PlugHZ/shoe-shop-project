@@ -3,7 +3,7 @@
   display: flex;
   height: 100vh; /* ทำให้เต็มความสูงของหน้าจอ */
   width: 100%;
-  font-family: 'Poppins', sans-serif; /* ใช้ฟอนต์สวยๆ (ต้อง import ใน index.html) */
+  font-family: 'Poppins', sans-serif; 
 }
 
 /* --- Image Section (Left Side) --- */
@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f4f7f6; /* สีพื้นหลังอ่อนๆ */
+  background-color: #f4f7f6; 
 }
 
 /* --- Form Container --- */
