@@ -30,3 +30,12 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* สูงอย่างน้อยเท่าหน้าจอ */
+}
+
+main {
+  flex-grow: 1; /* ให้ main ขยายเต็มพื้นที่ว่างเพื่อดัน footer ลงไป */
+}
