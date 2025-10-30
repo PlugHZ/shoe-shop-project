@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext.';
+import { AuthProvider } from './context/AuthContext.jsx';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
@@ -8,7 +8,7 @@ import Login from './pages/Login';
 import Footer from './components/Footer';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
+import Checkout from './pages/Checkout.jsx';
 
 function App() {
   return (
