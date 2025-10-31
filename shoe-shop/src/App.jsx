@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import Footer from './components/Footer';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import ProductForm from './pages/ProductForm';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/admin/add-product" element={<ProductForm />} />
             </Routes>
 
           </main>

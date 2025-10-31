@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; 
+import { useAuth } from '../context/AuthContext';
 import './AuthForm.css'; 
 
 const Signup = () => {
@@ -10,19 +9,19 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState(''); 
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { signup } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (password !== confirmPassword) {
       return setError('Passwords do not match!');
     }
     
     try {
-      // สร้าง User ใน Firebase Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      const userCredential = await signup(email, password);
       const user = userCredential.user;
 
       //  ส่งข้อมูล User ไปบันทึกที่ Backend
@@ -35,7 +34,6 @@ const Signup = () => {
         }),
       });
 
-      //  ไปที่หน้าแรกหลังจากสมัครสำเร็จ
       navigate('/');
 
     } catch (err) {

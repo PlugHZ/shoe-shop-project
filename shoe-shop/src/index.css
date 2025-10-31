@@ -39,3 +39,21 @@ body {
 main {
   flex-grow: 1; /* ให้ main ขยายเต็มพื้นที่ว่างเพื่อดัน footer ลงไป */
 }
+.admin-controls {
+  padding: 1rem 0;
+  text-align: right;
+}
+
+.add-product-btn {
+  background-color: var(--primary-color);
+  color: #121212;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.add-product-btn:hover {
+  background-color: #ffd900;
+}

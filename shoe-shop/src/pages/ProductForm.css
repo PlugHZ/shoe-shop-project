@@ -1,0 +1,16 @@
+.product-form-container { padding: 3rem 0; max-width: 800px; }
+.product-form-container h2 { text-align: center; margin-bottom: 2rem; color: var(--primary-color); }
+.product-form { background-color: var(--surface-color); padding: 2rem; border-radius: 8px; }
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary-color); }
+.form-group input, .form-group textarea {
+  width: 100%; padding: 0.75rem; background-color: var(--background-color);
+  border: 1px solid #555; border-radius: 4px; color: var(--text-color); font-size: 1rem;
+}
+.form-group-row { display: flex; gap: 1rem; }
+.form-group-row .form-group { flex: 1; }
+.submit-btn {
+  background: var(--primary-color); color: #121212; border: none; padding: 1rem;
+  width: 100%; font-size: 1rem; font-weight: bold; cursor: pointer; border-radius: 4px;
+}
+.error-message { color: #ff6b6b; background-color: rgba(255, 107, 107, 0.1); border: 1px solid #ff6b6b; padding: 0.75rem; border-radius: 4px; text-align: center; margin-bottom: 1.5rem; }
