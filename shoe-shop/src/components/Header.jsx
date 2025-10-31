@@ -15,11 +15,11 @@ const Header = () => {
         <Link to="/" className="logo">CPE SHOP</Link>
 
         <nav className="main-nav">
-          <ul>
-            <li><a href="#">รองเท้าฟุตบอล</a></li>
-            <li><a href="#">รองเท้าฟุตซอล</a></li>
-            <li><a href="#">รองเท้าวิ่ง</a></li>
-          </ul>
+       <ul>
+        <li><Link to="/category/football">รองเท้าฟุตบอล</Link></li>
+        <li><Link to="/category/futsal">รองเท้าฟุตซอล</Link></li>
+        <li><Link to="/category/running">รองเท้าวิ่ง</Link></li>
+        </ul>
         </nav>
         <div className="header-icons">
           <FiSearch size={22} />
