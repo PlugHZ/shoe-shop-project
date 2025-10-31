@@ -1,0 +1,29 @@
+/* src/pages/CategoryPage.css */
+
+.page-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* --- นี่คือส่วนสำคัญที่ทำให้เป็น 4 คอลัมน์ --- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์ ขนาดเท่ากัน */
+  gap: 1.5rem; /* ระยะห่างระหว่างการ์ด */
+  padding-top: 2rem;
+}
+
+/* สำหรับหน้าจอขนาดเล็ก (เช่น มือถือ) ให้แสดง 2 คอลัมน์ */
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* สำหรับหน้าจอเล็กมาก ให้แสดง 1 คอลัมน์ */
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}

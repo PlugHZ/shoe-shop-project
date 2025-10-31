@@ -20,7 +20,7 @@ const Checkout = () => {
 
   const handleSubmitOrder = (e) => {
     e.preventDefault();
-    // *** จุดนี้คือส่วนที่เราจะส่งข้อมูล Order ไปที่ Backend ในอนาคต ***
+    //จุดนี้คือส่วนที่เราจะส่งข้อมูล Order ไปที่ Backend ในอนาคต
     console.log("Order Data:", {
       customerInfo: formData,
       items: cartItems,

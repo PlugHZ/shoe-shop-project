@@ -10,19 +10,16 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductForm from './pages/ProductForm';
+import CategoryPage from './pages/CategoryPage';
 
 function App() {
   return (
-
     <Router>
       <AuthProvider>
-        
         <div className="app-wrapper">
-
           <Header />
 
           <main>
-
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/signup" element={<Signup />} />
@@ -31,14 +28,12 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/admin/add-product" element={<ProductForm />} />
+              <Route path="/category/:categoryName" element={<CategoryPage />} />
             </Routes>
-
           </main>
 
           <Footer />
-
         </div>
-
       </AuthProvider>
     </Router>
   );
