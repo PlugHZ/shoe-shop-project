@@ -137,37 +137,83 @@ router.delete("/:id", async (req, res) => {
 // แก้ไขสินค้าที่มีอยู่ 
 //ใช้ upload.array เพื่อรองรับการอัปโหลดรูปใหม่ (สูงสุด 5 รูป)
 router.put('/:id', upload.array('images', 5), async (req, res) => {
-    const { id } = req.params;
-    const { name, brand, description, price, stock, sizes, existing_image_urls } = req.body;
-    const newFiles = req.files; // รูปภาพใหม่ที่เพิ่งอัปโหลด
+ const { id } = req.params;
+ const { name, brand, description, price, stock, sizes, existing_image_urls } = req.body;
+ const newFiles = req.files;
 
-    try {
-        //จัดการรูปภาพลบรูปเก่าที่ไม่ใช้แล้ว + อัปโหลดรูปใหม่
-        
-        //แยก URL รูปเก่าที่ยังเหลืออยู่ส่งมาจาก Frontend
-        let existingUrls = [];
-        if (existing_image_urls) {
-            // Frontend อาจส่ง String JSON หรือ String เดียวมา
-            if (isJsonString(existing_image_urls)) {
-                existingUrls = JSON.parse(existing_image_urls);
-            } else if (typeof existing_image_urls === 'string') {
-                // รองรับกรณีเป็น String เดียว หรือ String คอมม่าคั่น (ถ้า Frontend ส่งมาแบบนั้น)
-                existingUrls = existing_image_urls.split(',').map(s => s.trim());
+try {
+ //ดึง URL รูปภาพเก่าจาก DB ก่อนทำการแก้ไข
+ const [oldProductResults] = await db.promise().query("SELECT image_urls FROM products WHERE id = ?", [id]);
+
+ if (oldProductResults.length === 0) {
+ return res.status(404).json({ error: "Product not found" });
+}
+ 
+ const rawOldUrls = oldProductResults[0].image_urls;
+
+        // 🔴 [จุดแก้ไขที่ 1] สร้างฟังก์ชันเพื่อจัดการการแปลงให้อยู่ในรูปแบบ Array เสมอ
+        const convertToUrlArray = (value) => {
+            if (!value) return [];
+            
+            
+            if (Array.isArray(value)) {
+                return value.flat(); //ใช้ .flat() เพื่อป้องกัน Array ซ้อน Array
             }
+            
+            //ถ้าเป็น JSON String
+            if (isJsonString(value)) {
+                return JSON.parse(value).flat();
+            }
+            
+            //ถ้าเป็น String ธรรมดา ที่มี Comma หรือ URL เดี่ยว
+            if (typeof value === 'string') {
+                return value.split(',').map(s => s.trim());
+            }
+            
+            return []; 
+        };
+        
+        // แปลง URL เดิมทั้งหมดใน DB ให้อยู่ในรูป Array 1 มิติ
+        let oldUrlsInDb = convertToUrlArray(rawOldUrls);
+
+        // ใช้ Set เพื่อการค้นหาที่รวดเร็ว
+        const oldUrlsSet = new Set(oldUrlsInDb.filter(url => url && typeof url === 'string')); 
+        
+        
+        //จัดการ URL รูปภาพใหม่ทั้งหมดที่เหลืออยู่ในฟอร์ม
+        
+        //แยก URL รูปเก่าที่ยังเหลืออยู่ (ส่งมาจาก Frontend)
+        let existingUrlsFromForm = [];
+        if (existing_image_urls) {
+            // ใช้ฟังก์ชันแปลงเพื่อจัดการรูปแบบที่ Frontend ส่งมาให้แน่ใจว่าเป็น Array
+            existingUrlsFromForm = convertToUrlArray(existing_image_urls);
         }
         
         //อัปโหลดรูปภาพใหม่ไป S3
         const newUploadPromises = newFiles.map(file => uploadFileToS3(file));
         const newImageUrls = await Promise.all(newUploadPromises);
 
-        // รวม URL ทั้งหมดรูปเก่าที่เหลือ + รูปใหม่
-        const finalImageUrls = existingUrls.concat(newImageUrls);
+        //รวม URL ทั้งหมดรูปเก่าที่เหลือ + รูปใหม่
+        const finalImageUrls = existingUrlsFromForm.concat(newImageUrls);
         
-        // 💡 เราจะละเว้นการลบรูปเก่าที่ไม่ใช้แล้วใน Backend ก่อน เพื่อให้โค้ดไม่ซับซ้อนเกินไป
-        // (โดยปกติควรถาม Frontend ว่ารูปไหนถูกลบออกจากฟอร์ม แล้วสั่งลบจาก S3)
-        // สำหรับตอนนี้ เราจะแค่บันทึก finalImageUrls กลับลง DB
+        
+        //สั่งลบไฟล์ที่ไม่ใช้แล้วออกจากS3
+        const urlsToDelete = [];
+        for (const url of oldUrlsSet) {
+            // ถ้ารูปเดิมอยู่ในDBแต่ไม่อยู่ในfinalImageUrlsหมายความว่าถูกลบออกจากฟอร์ม
+            if (!finalImageUrls.includes(url)) {
+                urlsToDelete.push(url);
+            }
+        }
 
-        //จัดการ Sizes
+        if (urlsToDelete.length > 0) {
+            console.log(`Deleting ${urlsToDelete.length} unused files from S3...`);
+            const deletePromises = urlsToDelete.map(url => deleteFileFromS3(url));
+            await Promise.all(deletePromises);
+        }
+
+
+        //จัดการ Sizes และ อัปเดตข้อมูลในMySQL
         let sizesJSON = sizes;
         if (typeof sizes === 'string') {
             sizesJSON = JSON.stringify(sizes.split(',').map(s => s.trim()));
@@ -175,7 +221,6 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
             sizesJSON = JSON.stringify(sizes);
         }
 
-        //อัปเดตข้อมูลใน MySQL
         const sql = `
             UPDATE products 
             SET name = ?, brand = ?, description = ?, price = ?, stock = ?, image_urls = ?, sizes = ?
@@ -198,11 +243,11 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
             return res.status(404).json({ error: "Product not found or no changes made" });
         }
 
-        res.json({ message: "Product updated successfully", productId: id, newImageUrls: finalImageUrls });
+        res.json({ message: "Product updated successfully", productId: id, finalImageUrls });
 
     } catch (error) {
-        console.error(`Error in PUT /api/products/${id}:`, error);
-        res.status(500).json({ error: 'Failed to update product' });
+        console.error(`Critical Error in PUT /api/products/${id}:`, error);
+        res.status(500).json({ error: 'Failed to update product or clean up old images' });
     }
 });
 
