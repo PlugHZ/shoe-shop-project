@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import "./ProductDetail.css";
@@ -7,7 +7,7 @@ import "./ProductDetail.css";
 const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
-  const { user } = useAuth(); // ✅ ใช้ตรวจสอบสิทธิ์ admin
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
@@ -16,7 +16,6 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [mainImage, setMainImage] = useState(null);
 
-  // 🔹 โหลดข้อมูลสินค้า
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -50,7 +49,7 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  // 🔹 ฟังก์ชันลบสินค้า (เฉพาะ admin)
+  //ฟังก์ชันลบสินค้า (เฉพาะ admin)
   const handleDelete = async () => {
     if (
       !window.confirm(
@@ -71,16 +70,16 @@ const ProductDetail = () => {
         throw new Error(errorData.error || "Failed to delete product");
       }
 
-      alert("✅ สินค้าถูกลบสำเร็จ!");
+      alert(" สินค้าถูกลบสำเร็จ!");
       navigate("/");
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert(`❌ ไม่สามารถลบสินค้าได้: ${error.message}`);
+      alert(` ไม่สามารถลบสินค้าได้: ${error.message}`);
       setLoading(false);
     }
   };
 
-  // 🔹 เพิ่มสินค้าในตะกร้า
+  // เพิ่มสินค้าในตะกร้า
   const handleAddToCart = () => {
     if (!selectedSize && product.sizes.length > 0) {
       alert("กรุณาเลือกไซส์!");
@@ -90,7 +89,6 @@ const ProductDetail = () => {
     navigate("/cart");
   };
 
-  // 🔹 Loading & Error state
   if (loading)
     return (
       <h2 className="container" style={{ padding: "3rem 0" }}>
@@ -110,10 +108,8 @@ const ProductDetail = () => {
     ? rawImages[0]
     : rawImages;
 
-  // 🔹 ส่วนแสดงผล
   return (
     <div className="product-detail-container container">
-      {/* 🖼️ แกลเลอรี่รูปภาพ */}
       <div className="image-gallery">
         <div className="thumbnails">
           {availableImages.map((img, index) => (
@@ -131,7 +127,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* ℹ️ ข้อมูลสินค้า */}
       <div className="product-info-details">
         <p className="brand">{product.brand}</p>
         <h1>{product.name}</h1>
@@ -157,33 +152,82 @@ const ProductDetail = () => {
           </div>
         )}
 
-        <div className="quantity-selector">{/* ... */}</div>
+        <div className="quantity-selector">
+          <p>จำนวน:</p>
+          <div className="quantity-controls">
+            <button
+              onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+              disabled={quantity <= 1}
+            >
+              -
+            </button>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => {
+                const val = Math.max(
+                  1,
+                  Math.min(product.stock, Number(e.target.value))
+                );
+                setQuantity(val);
+              }}
+              min="1"
+              max={product.stock} // จำกัดไม่ให้เกินสต็อก
+              readOnly // แนะนำให้ใช้ปุ่มเท่านั้น
+            />
+            <button
+              onClick={() =>
+                setQuantity((prev) => Math.min(product.stock, prev + 1))
+              }
+              disabled={quantity >= product.stock} // ห้ามกดเพิ่มเมื่อเต็มสต็อก
+            >
+              +
+            </button>
+          </div>
+          {product.stock === 0 && <p className="stock-out">สินค้าหมดสต็อก</p>}
+          {product.stock > 0 && (
+            <p className="stock-info">({product.stock} ชิ้นในสต็อก)</p>
+          )}
+        </div>
 
-        <button className="add-to-cart-btn" onClick={handleAddToCart}>
-          เพิ่มไปยังตะกร้า
-        </button>
-
-        {/* 🔐 แสดงปุ่มลบเฉพาะ admin */}
-        {user?.role === "admin" && (
+        <div className="action-buttons">
+          {/*ปุ่มเพิ่มในตะกร้า (หลัก) */}
           <button
-            className="delete-btn"
-            onClick={handleDelete}
-            disabled={loading}
-            style={{
-              marginTop: "10px",
-              backgroundColor: "#dc3545",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
+            className="add-to-cart-btn"
+            onClick={handleAddToCart}
+            disabled={
+              !selectedSize || quantity > product.stock || product.stock === 0
+            }
           >
-            {loading ? "กำลังลบ..." : "ลบสินค้า (Admin)"}
+            เพิ่มลงตะกร้า ({quantity})
           </button>
-        )}
+        </div>
 
-        <div className="product-description">{/* ... */}</div>
+        <div className="product-description">
+          <h3>รายละเอียดสินค้า</h3>
+          <p>{product.description || "ไม่มีรายละเอียดสินค้า"}</p>
+        </div>
+
+        {/*แสดงปุ่มลบเฉพาะ admin */}
+        {user?.role === "admin" && (
+          <div className="admin-actions">
+            {/*ปุ่มแก้ไข */}
+            <Link to={`/product/edit/${id}`} style={{ textDecoration: "none" }}>
+              <button className="edit-product-btn" disabled={loading}>
+                แก้ไขสินค้า
+              </button>
+            </Link>
+
+            {/*ปุ่มลบ */}
+            <button
+              className="delete-btn"
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              {loading ? "กำลังลบ..." : "ลบสินค้า"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

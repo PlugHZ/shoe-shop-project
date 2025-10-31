@@ -11,6 +11,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductForm from './pages/ProductForm';
 import CategoryPage from './pages/CategoryPage';
+import EditProduct from './pages/EditProduct';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/admin/add-product" element={<ProductForm />} />
+              <Route path="/product/edit/:id" element={<EditProduct />} />
               <Route path="/category/:categoryName" element={<CategoryPage />} />
             </Routes>
           </main>
