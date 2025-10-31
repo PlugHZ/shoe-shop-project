@@ -130,6 +130,11 @@ const ProductDetail = () => {
       <div className="product-info-details">
         <p className="brand">{product.brand}</p>
         <h1>{product.name}</h1>
+        {product.category && (
+            <p className="category-tag" style={{ fontSize: '0.9rem', color: '#6c757d', marginBottom: '5px' }}>
+                ประเภท: <strong>{product.category}</strong>
+            </p>
+        )}
         <p className="status">
           สถานะของสินค้า : {product.status || "สินค้าพร้อมส่ง"}
         </p>

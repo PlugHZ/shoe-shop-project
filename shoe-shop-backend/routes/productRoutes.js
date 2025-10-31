@@ -138,7 +138,7 @@ router.delete("/:id", async (req, res) => {
 //ใช้ upload.array เพื่อรองรับการอัปโหลดรูปใหม่ (สูงสุด 5 รูป)
 router.put('/:id', upload.array('images', 5), async (req, res) => {
  const { id } = req.params;
- const { name, brand, description, price, stock, sizes, existing_image_urls } = req.body;
+ const { name, brand, description, price, stock, sizes, existing_image_urls, category } = req.body;
  const newFiles = req.files;
 
 try {
@@ -151,7 +151,7 @@ try {
  
  const rawOldUrls = oldProductResults[0].image_urls;
 
-        // 🔴 [จุดแก้ไขที่ 1] สร้างฟังก์ชันเพื่อจัดการการแปลงให้อยู่ในรูปแบบ Array เสมอ
+        //สร้างฟังก์ชันเพื่อจัดการการแปลงให้อยู่ในรูปแบบ Array เสมอ
         const convertToUrlArray = (value) => {
             if (!value) return [];
             
@@ -223,12 +223,13 @@ try {
 
         const sql = `
             UPDATE products 
-            SET name = ?, brand = ?, description = ?, price = ?, stock = ?, image_urls = ?, sizes = ?
+            SET name = ?, brand = ?, category = ? ,description = ?, price = ?, stock = ?, image_urls = ?, sizes = ?
             WHERE id = ?
         `;
         const values = [
             name, 
-            brand, 
+            brand,
+            category, 
             description, 
             price, 
             stock, 
@@ -254,7 +255,7 @@ try {
 // POST: New Product
 router.post("/", upload.array("images", 5), async (req, res) => {
   try {
-    const { name, brand, description, price, stock, sizes } = req.body;
+    const { name, brand, description, price, stock, sizes,category } = req.body;
 
     let imageUrls = [];
     if (req.files && req.files.length > 0) {
@@ -273,10 +274,11 @@ router.post("/", upload.array("images", 5), async (req, res) => {
     }
 
     const sql =
-      "INSERT INTO products (name, brand, description, price, stock, image_urls, sizes) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO products (name, brand, category, description, price, stock, image_urls, sizes) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const values = [
       name,
       brand,
+      category,
       description,
       price,
       stock,
