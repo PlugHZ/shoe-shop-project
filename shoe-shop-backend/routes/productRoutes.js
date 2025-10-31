@@ -274,7 +274,7 @@ router.post("/", upload.array("images", 5), async (req, res) => {
     }
 
     const sql =
-      "INSERT INTO products (name, brand, category, description, price, stock, image_urls, sizes) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO products (name, brand, category, description, price, stock, image_urls, sizes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [
       name,
       brand,
