@@ -1,5 +1,4 @@
 import React from 'react';
-// 1. Import 'Link' จาก react-router-dom
 import { Link } from 'react-router-dom'; 
 import { FiSearch, FiShoppingCart } from 'react-icons/fi';
 import './Header.css';

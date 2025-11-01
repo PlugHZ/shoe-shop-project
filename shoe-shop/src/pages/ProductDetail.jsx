@@ -28,7 +28,6 @@ const ProductDetail = () => {
         const data = await response.json();
         setProduct(data);
 
-        // ตั้งรูปแรกเป็นภาพหลัก
         let firstImage = null;
         if (data.image_urls && data.image_urls.length > 0) {
           firstImage = Array.isArray(data.image_urls[0])
@@ -49,7 +48,6 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  //ฟังก์ชันลบสินค้า (เฉพาะ admin)
   const handleDelete = async () => {
     if (
       !window.confirm(
@@ -79,7 +77,6 @@ const ProductDetail = () => {
     }
   };
 
-  // เพิ่มสินค้าในตะกร้า
   const handleAddToCart = () => {
     if (!selectedSize && product.sizes.length > 0) {
       alert("กรุณาเลือกไซส์!");
@@ -177,14 +174,14 @@ const ProductDetail = () => {
                 setQuantity(val);
               }}
               min="1"
-              max={product.stock} // จำกัดไม่ให้เกินสต็อก
-              readOnly // แนะนำให้ใช้ปุ่มเท่านั้น
+              max={product.stock} 
+              readOnly 
             />
             <button
               onClick={() =>
                 setQuantity((prev) => Math.min(product.stock, prev + 1))
               }
-              disabled={quantity >= product.stock} // ห้ามกดเพิ่มเมื่อเต็มสต็อก
+              disabled={quantity >= product.stock} 
             >
               +
             </button>
@@ -196,7 +193,6 @@ const ProductDetail = () => {
         </div>
 
         <div className="action-buttons">
-          {/*ปุ่มเพิ่มในตะกร้า (หลัก) */}
           <button
             className="add-to-cart-btn"
             onClick={handleAddToCart}
@@ -213,17 +209,14 @@ const ProductDetail = () => {
           <p>{product.description || "ไม่มีรายละเอียดสินค้า"}</p>
         </div>
 
-        {/*แสดงปุ่มลบเฉพาะ admin */}
         {user?.role === "admin" && (
           <div className="admin-actions">
-            {/*ปุ่มแก้ไข */}
             <Link to={`/product/edit/${id}`} style={{ textDecoration: "none" }}>
               <button className="edit-product-btn" disabled={loading}>
                 แก้ไขสินค้า
               </button>
             </Link>
 
-            {/*ปุ่มลบ */}
             <button
               className="delete-btn"
               onClick={handleDelete}

@@ -12,7 +12,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // (ฟังก์ชัน signup, login, logout ของเพื่อนคุณ ดีอยู่แล้ว)
   function signup(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
   }
@@ -23,25 +22,20 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  // useEffect จะคอย "ฟัง" การเปลี่ยนแปลงสถานะการล็อกอินจาก Firebase
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // ถ้ามี user ล็อกอินใน Firebase
         try {
-          // 1. (แก้ไข!) ไปดึงข้อมูลจาก Backend ของเรา
-          //    (เราใช้ firebaseUser.uid เพื่อไปค้นหาในตาราง users)
           const response = await fetch(`http://localhost:3001/api/users/${firebaseUser.uid}`);
           
-          // --- (นี่คือส่วนที่แก้ไข) ---
           if (response.ok) { 
-            // ถ้าหาเจอ (200 OK)
             const userData = await response.json(); // จะได้ { id, email, role }
             setUser({
               uid: firebaseUser.uid,
               email: firebaseUser.email,
-              id: userData.id,      // 👈 (สำคัญ!) ได้ id จาก MySQL
-              role: userData.role,  // 👈 ได้ role จาก MySQL
+              id: userData.id,      //  ได้ id จาก MySQL
+              role: userData.role,  //  ได้ role จาก MySQL
             });
           } else {
             // ถ้าหาไม่เจอ (404 Not Found)
@@ -51,11 +45,10 @@ export function AuthProvider({ children }) {
             setUser({
               uid: firebaseUser.uid,
               email: firebaseUser.email,
-              id: null,   // 👈 (สำคัญ!) id เป็น null
-              role: null, // 👈 role เป็น null
+              id: null,   //  id เป็น null
+              role: null, //  เป็น null
             });
           }
-          // --- (จบส่วนที่แก้ไข) ---
 
         } catch (error) {
           console.error("Failed to fetch user data:", error);

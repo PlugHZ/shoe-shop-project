@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext'; //
-import { useAuth } from '../context/AuthContext'; //
+import { useCart } from '../context/CartContext'; 
+import { useAuth } from '../context/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
-import './Checkout.css'; //
+import './Checkout.css'; 
 
 const Checkout = () => {
-  const { cartItems, cartTotal, fetchCart } = useCart(); //
-  const { user } = useAuth(); //
+  const { cartItems, cartTotal, fetchCart } = useCart(); 
+  const { user } = useAuth(); 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -24,18 +24,18 @@ const Checkout = () => {
     }));
   };
 
-  const handleSubmitOrder = async (e) => { //
+  const handleSubmitOrder = async (e) => { 
     e.preventDefault();
     setLoading(true);
 
     const orderData = {
-      user_id: user ? user.id : null, //
+      user_id: user ? user.id : null, 
       customer_name: formData.name,
       shipping_address: formData.address,
       phone: formData.phone,
       total_price: cartTotal,
       items: cartItems.map(item => ({
-        product_id: item.product_id, //
+        product_id: item.product_id, 
         quantity: item.quantity,
         size: item.size,
         price_at_purchase: item.price
@@ -43,7 +43,7 @@ const Checkout = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/orders', { //
+      const response = await fetch('http://localhost:3001/api/orders', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
@@ -57,10 +57,10 @@ const Checkout = () => {
       alert('คำสั่งซื้อของคุณถูกส่งแล้ว!');
       
       if (user) { 
-        await fetchCart(); //
+        await fetchCart(); 
       }
       
-      navigate('/'); //
+      navigate('/'); 
 
     } catch (err) {
       console.error("Error placing order:", err);
@@ -86,7 +86,6 @@ const Checkout = () => {
           </div>
           <div className="form-group">
             <label htmlFor="phone">เบอร์โทรศัพท์</label>
-            {/* --- (นี่คือบรรทัดที่แก้ไข) --- */}
             <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} required />
           </div>
           

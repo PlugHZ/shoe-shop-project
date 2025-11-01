@@ -16,8 +16,8 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
 // Use Routes
-app.use('/api/products', productRoutes); // บอกให้ /api/products ไปใช้ไฟล์ productRoutes.js
-app.use('/api/users', userRoutes); // บอกให้ /api/users ไปใช้ไฟล์ userRoutes.js  
+app.use('/api/products', productRoutes); 
+app.use('/api/users', userRoutes); 
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 
