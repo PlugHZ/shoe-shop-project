@@ -169,6 +169,7 @@ const EditProduct = () => {
           >
             <option value="รองเท้าวิ่ง">รองเท้าวิ่ง</option>
             <option value="รองเท้าฟุตบอล">รองเท้าฟุตบอล</option>
+            <option value="รองเท้าฟุตซอล">รองเท้าฟุตซอล</option>
             <option value="รองเท้าลำลอง">รองเท้าลำลอง</option>
             <option value="อื่นๆ">อื่นๆ</option>
           </select>

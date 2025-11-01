@@ -1,50 +1,50 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db');
+const db = require('../config/db'); // 👈 (นี่คือ .promise() ที่เราแก้แล้ว)
 
-// POST /api/users - สร้างผู้ใช้ใหม่ในฐานข้อมูลของเรา
-router.post('/', (req, res) => {
-  const { email, firebase_uid } = req.body;
+// POST /api/users - สร้างผู้ใช้ใหม่ (แก้แล้ว)
+router.post('/', async (req, res) => { // 👈 1. เพิ่ม async
+  try { // 👈 2. เพิ่ม try
+    const { email, firebase_uid } = req.body;
 
-  // ตรวจสอบว่ามีข้อมูลที่จำเป็นส่งมาครบหรือไม่
-  if (!email || !firebase_uid) {
-    return res.status(400).json({ error: 'Email and Firebase UID are required' });
-  }
-
-  const sql = "INSERT INTO users (email, firebase_uid, role) VALUES (?, ?, 'customer')";
-  const values = [email, firebase_uid];
-
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      // 1062 คือ error code ของ MySQL ที่บอกว่ามีข้อมูลซ้ำ (UNIQUE constraint)
-      if (err.code === 'ER_DUP_ENTRY') {
-        return res.status(409).json({ error: 'User already exists' });
-      }
-      console.error("Error creating user: ", err);
-      return res.status(500).json({ error: "Failed to create user in database" });
+    if (!email || !firebase_uid) {
+      return res.status(400).json({ error: 'Email and Firebase UID are required' });
     }
+
+    const sql = "INSERT INTO users (email, firebase_uid, role) VALUES (?, ?, 'customer')";
+    const values = [email, firebase_uid];
+
+    const [result] = await db.query(sql, values); // 👈 3. ใช้ await
+
     res.status(201).json({ message: "User created successfully", userId: result.insertId });
-  });
-}); // <-- จุดสิ้นสุดของ router.post
 
-// GET /api/users/:uid - ดึงข้อมูลผู้ใช้คนเดียว
-// (ย้ายมาไว้ตรงนี้ ให้อยู่ระดับนอกสุด)
-router.get('/:uid', (req, res) => {
-  const { uid } = req.params;
-  const sql = "SELECT id, email, role FROM users WHERE firebase_uid = ?";
-
-  db.query(sql, [uid], (err, results) => {
-    if (err) {
-      console.error("Error fetching user:", err);
-      return res.status(500).json({ error: "Failed to fetch user" });
+  } catch (err) { // 👈 4. เพิ่ม catch
+    // (โค้ด Error เดิม)
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'User already exists' });
     }
+    console.error("Error creating user: ", err);
+    return res.status(500).json({ error: "Failed to create user in database" });
+  }
+});
+
+// GET /api/users/:uid - ดึงข้อมูลผู้ใช้คนเดียว (แก้แล้ว)
+router.get('/:uid', async (req, res) => { // 👈 1. เพิ่ม async
+  try { // 👈 2. เพิ่ม try
+    const { uid } = req.params;
+    const sql = "SELECT id, email, role FROM users WHERE firebase_uid = ?";
+
+    const [results] = await db.query(sql, [uid]); // 👈 3. ใช้ await
+
     if (results.length === 0) {
-      // ตรงนี้สำคัญมาก ถ้าหา user ไม่เจอ ต้องส่ง 404
       return res.status(404).json({ error: "User not found" }); 
     }
-    // ถ้าเจอ user ให้ส่งข้อมูล JSON กลับไป
     res.json(results[0]); 
-  });
+
+  } catch (err) { // 👈 4. เพิ่ม catch
+    console.error("Error fetching user:", err);
+    return res.status(500).json({ error: "Failed to fetch user" });
+  }
 });
 
 module.exports = router;

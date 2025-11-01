@@ -1,7 +1,7 @@
 // src/pages/CategoryPage.jsx
 import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
-import ProductCard from '../components/ProductCard/ProductCard.jsx'; //
+import ProductCard from '../components/ProductCard';
 import './CategoryPage.css'; //
 
 // ฟังก์ชัน สำหรับแปลง URL slug เป็นชื่อ Category ที่อยู่ใน DB
