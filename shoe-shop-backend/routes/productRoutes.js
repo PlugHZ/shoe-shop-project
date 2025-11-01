@@ -216,13 +216,18 @@ router.post("/", upload.array("images", 5), async (req, res) => { // 👈 1. ม
       sizesJSON = JSON.stringify(sizes);
     }
 
-    const sql =
-      "INSERT INTO products (name, brand, category, description, price, stock, image_urls, sizes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"; // (แก้!) เพิ่ม category
-    const values = [
-      name, brand, category, description, price, stock,
-      JSON.stringify(imageUrls),
-      sizesJSON,
-    ];
+    const sql =
+      "INSERT INTO products (name, brand, category, description, price, stock, image_urls, sizes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [
+      name,
+      brand,
+      category,
+      description,
+      price,
+      stock,
+      JSON.stringify(imageUrls),
+      sizesJSON,
+    ];
 
     const [result] = await db.query(sql, values); // 👈 2. ใช้ await
 
