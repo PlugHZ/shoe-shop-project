@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext'; // ดึงข้อมูลตะกร้ามาแสดงสรุป
-import './Checkout.css';
+import { useCart } from '../context/CartContext'; //
+import { useAuth } from '../context/AuthContext'; //
+import { useNavigate } from 'react-router-dom';
+import './Checkout.css'; //
 
 const Checkout = () => {
-  const { cartItems, cartTotal } = useCart();
+  const { cartItems, cartTotal, fetchCart } = useCart(); //
+  const { user } = useAuth(); //
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     address: '',
     phone: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,23 +24,56 @@ const Checkout = () => {
     }));
   };
 
-  const handleSubmitOrder = (e) => {
+  const handleSubmitOrder = async (e) => { //
     e.preventDefault();
-    //จุดนี้คือส่วนที่เราจะส่งข้อมูล Order ไปที่ Backend ในอนาคต
-    console.log("Order Data:", {
-      customerInfo: formData,
-      items: cartItems,
-      total: cartTotal,
-    });
-    alert('คำสั่งซื้อของคุณถูกส่งแล้ว! (จำลอง)');
-    // หลังจากส่ง Order สำเร็จ อาจจะเคลียร์ตะกร้า หรือพาไปหน้า Thank You
+    setLoading(true);
+
+    const orderData = {
+      user_id: user ? user.id : null, //
+      customer_name: formData.name,
+      shipping_address: formData.address,
+      phone: formData.phone,
+      total_price: cartTotal,
+      items: cartItems.map(item => ({
+        product_id: item.product_id, //
+        quantity: item.quantity,
+        size: item.size,
+        price_at_purchase: item.price
+      }))
+    };
+
+    try {
+      const response = await fetch('http://localhost:3001/api/orders', { //
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Failed to place order");
+      }
+
+      alert('คำสั่งซื้อของคุณถูกส่งแล้ว!');
+      
+      if (user) { 
+        await fetchCart(); //
+      }
+      
+      navigate('/'); //
+
+    } catch (err) {
+      console.error("Error placing order:", err);
+      alert(`เกิดข้อผิดพลาด: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="checkout-container container">
       <h1>ข้อมูลการจัดส่ง</h1>
       <div className="checkout-layout">
-        {/* ฟอร์มกรอกข้อมูล */}
         <form className="shipping-form" onSubmit={handleSubmitOrder}>
           <h2>ที่อยู่สำหรับจัดส่ง</h2>
           <div className="form-group">
@@ -47,17 +86,20 @@ const Checkout = () => {
           </div>
           <div className="form-group">
             <label htmlFor="phone">เบอร์โทรศัพท์</label>
+            {/* --- (นี่คือบรรทัดที่แก้ไข) --- */}
             <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} required />
           </div>
-          <button type="submit" className="place-order-btn">ยืนยันคำสั่งซื้อ</button>
+          
+          <button type="submit" className="place-order-btn" disabled={loading || cartItems.length === 0}>
+            {loading ? 'กำลังดำเนินการ...' : 'ยืนยันคำสั่งซื้อ'}
+          </button>
         </form>
 
-        {/* ส่วนสรุปยอดสั่งซื้อ (เหมือนในหน้า Cart) */}
         <div className="order-summary-checkout">
           <h2>สรุปรายการ</h2>
           {cartItems.map(item => (
-            <div key={`${item.id}-${item.size}`} className="summary-item">
-              <img src={item.images[0]} alt={item.name} />
+            <div key={item.id} className="summary-item"> 
+              <img src={item.images?.[0] || '/images/placeholder.png'} alt={item.name} />
               <div className="item-info">
                 <span>{item.name} (x{item.quantity})</span>
                 <span>Size: {item.size}</span>
