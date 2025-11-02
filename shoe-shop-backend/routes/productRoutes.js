@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const { uploadFileToS3, deleteFileFromS3 } = require("../utils/s3"); 
-const db = require("../config/db"); 
+const { uploadFileToS3, deleteFileFromS3 } = require("../utils/s3");
+const db = require("../config/db");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -20,7 +20,7 @@ function isJsonString(str) {
 router.get("/", async (req, res) => {
   try {
     const sql = "SELECT * FROM products";
-    const [results] = await db.query(sql); 
+    const [results] = await db.query(sql);
 
     const products = results.map((p) => ({
       ...p,
@@ -41,7 +41,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const sql = "SELECT * FROM products WHERE id = ?";
-    const [results] = await db.query(sql, [id]); 
+    const [results] = await db.query(sql, [id]);
 
     if (results.length === 0)
       return res.status(404).json({ error: "Product not found" });
@@ -183,10 +183,10 @@ router.put("/:id", upload.array("images", 5), async (req, res) => {
       sizesJSON = JSON.stringify(sizes);
     }
     const sql = `
-            UPDATE products 
-            SET name = ?, brand = ?, category = ? ,description = ?, price = ?, stock = ?, image_urls = ?, sizes = ?
-            WHERE id = ?
-        `;
+      UPDATE products 
+      SET name = ?, brand = ?, category = ? ,description = ?, price = ?, stock = ?, image_urls = ?, sizes = ?
+      WHERE id = ?
+      `;
     const values = [
       name,
       brand,
@@ -249,7 +249,7 @@ router.post("/", upload.array("images", 5), async (req, res) => {
       sizesJSON,
     ];
 
-    const [result] = await db.query(sql, values); 
+    const [result] = await db.query(sql, values);
 
     res.status(201).json({
       message: "Product created successfully",

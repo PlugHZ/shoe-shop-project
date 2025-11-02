@@ -25,7 +25,7 @@ const Signup = () => {
       const user = userCredential.user;
 
       //  ส่งข้อมูล User ไปบันทึกที่ Backend
-      await fetch('http://localhost:3001/api/users', {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

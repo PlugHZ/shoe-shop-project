@@ -26,7 +26,7 @@ const EditProduct = () => {
     const fetchProductData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/products/${id}`
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`
         );
         if (!response.ok) throw new Error("Product not found");
         const data = await response.json();
@@ -97,10 +97,13 @@ const EditProduct = () => {
     });
 
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}`, {
-        method: "PUT", //ใช้PUTสำหรับการแก้ไข
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+        {
+          method: "PUT", //ใช้PUTสำหรับการแก้ไข
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errData = await response.json();
@@ -170,7 +173,6 @@ const EditProduct = () => {
             <option value="รองเท้าวิ่ง">รองเท้าวิ่ง</option>
             <option value="รองเท้าฟุตบอล">รองเท้าฟุตบอล</option>
             <option value="รองเท้าฟุตซอล">รองเท้าฟุตซอล</option>
-            <option value="รองเท้าลำลอง">รองเท้าลำลอง</option>
             <option value="อื่นๆ">อื่นๆ</option>
           </select>
         </div>

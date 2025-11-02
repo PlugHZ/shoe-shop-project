@@ -17,11 +17,10 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         
-        const response = await fetch('http://localhost:3001/api/products');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
         const data = await response.json();
 
-        
-        setAllProducts(data); 
+        setAllProducts(data);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {

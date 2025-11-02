@@ -7,7 +7,11 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-  origin: "https://shoe-shop-frontend-0v1r.onrender.com"
+  origin: [
+  "https://shoe-shop-frontend-0v1r.onrender.com",
+  "http://localhost:5173",
+  "http://localhost:3000"
+  ]
 }));
 app.use(express.json());
 

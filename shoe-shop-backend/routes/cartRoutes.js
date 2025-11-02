@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db'); // 👈
+const db = require('../config/db'); 
 
-// --- (GET) ดึงสินค้าในตะกร้าทั้งหมดของผู้ใช้ 1 คน (พร้อมข้อมูลสินค้า) ---
+// --- (GET) ดึงสินค้าในตะกร้าทั้งหมดของผู้ใช้ 1 คน (พร้อมข้อมูลสินค้า)
 router.get('/user/:userId', async (req, res) => { 
   try {
     const { userId } = req.params;
@@ -27,7 +27,7 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
-// --- (POST) เพิ่มสินค้าลงในตะกร้า ---
+// --- (POST) เพิ่มสินค้าลงในตะกร้า 
 router.post('/', async (req, res) => { 
   try {
     const { user_id, product_id, quantity, size } = req.body;
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
     const [results] = await db.query(checkSql, [user_id, product_id, size]); 
 
     if (results.length > 0) {
-      //  ถ้ามี -> ให้อัปเดตจำนวน (UPDATE)
+      //  ถ้ามี ให้อัปเดตจำนวน (UPDATE)
       const existingItem = results[0];
       const updateSql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
       const newQuantity = existingItem.quantity + quantity;
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
       res.status(200).json({ message: "Quantity updated", cartItemId: existingItem.id });
 
     } else {
-      //  ถ้าไม่มี -> ให้เพิ่มแถวใหม่ (INSERT)
+      //  ถ้าไม่มีให้เพิ่มแถวใหม่ (INSERT)
       const insertSql = "INSERT INTO cart_items (user_id, product_id, quantity, size) VALUES (?, ?, ?, ?)";
 
       const [insertResult] = await db.query(insertSql, [user_id, product_id, quantity, size]); 
@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// --- (DELETE) ลบสินค้าออกจากตะกร้า ---
+// --- (DELETE) ลบสินค้าออกจากตะกร้า
 router.delete('/:itemId', async (req, res) => { 
   try {
     const { itemId } = req.params;
@@ -71,7 +71,7 @@ router.delete('/:itemId', async (req, res) => {
   }
 });
 
-// --- (PUT) อัปเดตจำนวนสินค้าในตะกร้า (เช่น แก้จาก 1 เป็น 5) ---
+// --- (PUT) อัปเดตจำนวนสินค้าในตะกร้า
 router.put('/:itemId', async (req, res) => { 
   try {
     const { itemId } = req.params;

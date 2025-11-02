@@ -21,7 +21,7 @@ const ProductDetail = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:3001/api/products/${id}`
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`
         );
         if (!response.ok) throw new Error("Product not found");
 
@@ -59,7 +59,7 @@ const ProductDetail = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         method: "DELETE",
       });
 

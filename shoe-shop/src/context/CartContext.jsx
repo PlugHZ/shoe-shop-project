@@ -5,7 +5,7 @@ const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 // (นี่คือ URL ของ Backend ที่เรารันไว้)
-const API_URL = 'http://localhost:3001/api/cart';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/cart`;
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);

@@ -52,7 +52,7 @@ const ProductForm = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/products", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
         method: "POST",
         body: formData,
       });
@@ -167,7 +167,7 @@ const ProductForm = () => {
           />
         </div>
 
-        {/* ✅ Preview รูป */}
+        {/*  Preview รูป */}
         {previewImages.length > 0 && (
           <div className="image-preview-container">
             {previewImages.map((url, index) => (
