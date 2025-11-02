@@ -2,17 +2,18 @@ const mysql = require('mysql2');
 require('dotenv').config();
 
 const connection = mysql.createConnection({
-  host: process.env.DB_HOST, //
-  user: process.env.DB_USER, //
-  password: process.env.DB_PASSWORD, //
-  database: process.env.DB_NAME //
+  host: process.env.DB_HOST, 
+  user: process.env.DB_USER, 
+  password: process.env.DB_PASSWORD, 
+  database: process.env.DB_NAME, 
+  port: process.env.DB_PORT,
+  connectTimeout: 30000
 });
 
 connection.connect(error => {
   if (error) throw error;
-  console.log("Successfully connected to the database."); //
+  console.log("Successfully connected to the database."); 
 });
 
-// ❗️ (สำคัญ!) เรา Export .promise() ออกไป
-// ❗️ เพื่อให้ไฟล์ productRoutes.js (ของเพื่อน) ใช้งานได้
+
 module.exports = connection.promise();
