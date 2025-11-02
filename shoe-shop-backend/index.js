@@ -6,7 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://shoe-shop-frontend-0v1r.onrender.com"
+}));
 app.use(express.json());
 
 // Import Routes
