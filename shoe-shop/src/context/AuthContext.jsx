@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { getAuth, signInWithEmailAndPassword,createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase'; // 👈
+import { auth } from '../firebase'; 
 
 const AuthContext = React.createContext();
 
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
       if (firebaseUser) {
         // ถ้ามี user ล็อกอินใน Firebase
         try {
-          const response = await fetch(`http://localhost:3001/api/users/${firebaseUser.uid}`);
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${firebaseUser.uid}`);
           
           if (response.ok) { 
             const userData = await response.json(); // จะได้ { id, email, role }
