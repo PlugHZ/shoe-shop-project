@@ -1,5 +1,5 @@
 /* ใช้ Google Font เพื่อความสวยงาม */
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap");
 
 :root {
   --primary-color: #fde047; /* สีเหลือง */
@@ -17,12 +17,14 @@
 }
 
 body {
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
   background-color: var(--background-color);
-  background-image: url('/images/bg1.jpg'); /* background image */
+  background-image: url("/images/bg1.jpg"); /* background image */
   background-size: cover;
   background-attachment: fixed;
   color: var(--text-color);
+  overflow-x: hidden;
+  min-width: 320px;
 }
 
 .container {
@@ -56,4 +58,15 @@ main {
 
 .add-product-btn:hover {
   background-color: #ffd900;
+}
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    width: 100%;
+
+    padding: 0 10px;
+  }
 }
