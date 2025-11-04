@@ -23,6 +23,12 @@ const Banner = () => {
         <SwiperSlide>
           <img src="/images/banners/banner2.jpg" alt="Adidas Promo Banner" />
         </SwiperSlide>
+        <SwiperSlide>
+          <img src="/images/banners/banner3.jpg" alt="Puma Promo Banner" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="/images/banners/banner4.jpg" alt="Nike Promo Banner" />
+        </SwiperSlide>
       </Swiper>
     </section>
   );
