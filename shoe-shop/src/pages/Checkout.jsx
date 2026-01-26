@@ -1,67 +1,68 @@
-import React, { useState } from 'react';
-import { useCart } from '../context/CartContext'; 
-import { useAuth } from '../context/AuthContext'; 
-import { useNavigate } from 'react-router-dom';
-import './Checkout.css'; 
+import React, { useState } from "react";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "./Checkout.css";
 
 const Checkout = () => {
-  const { cartItems, cartTotal, fetchCart } = useCart(); 
-  const { user } = useAuth(); 
+  const { cartItems, cartTotal, fetchCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    phone: '',
+    name: "",
+    address: "",
+    phone: "",
   });
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleSubmitOrder = async (e) => { 
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const orderData = {
-      user_id: user ? user.id : null, 
+      user_id: user ? user.id : null,
       customer_name: formData.name,
       shipping_address: formData.address,
       phone: formData.phone,
       total_price: cartTotal,
-      items: cartItems.map(item => ({
-        product_id: item.product_id, 
+      items: cartItems.map((item) => ({
+        product_id: item.product_id,
         quantity: item.quantity,
         size: item.size,
-        price_at_purchase: item.price
-      }))
+        price_at_purchase: item.price,
+      })),
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      });
-
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/orders`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderData),
+        },
+      );
+      const resData = await response.json();
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Failed to place order");
+        throw new Error(resData.error || "Failed to place order");
       }
 
-      alert('คำสั่งซื้อของคุณถูกส่งแล้ว!');
-      
-      if (user) { 
-        await fetchCart(); 
+      if (user) {
+        await fetchCart();
       }
-      
-      navigate('/'); 
 
+      navigate("/order-success", {
+        state: { orderId: resData.orderId || resData.insertId },
+      });
     } catch (err) {
       console.error("Error placing order:", err);
       alert(`เกิดข้อผิดพลาด: ${err.message}`);
@@ -78,32 +79,63 @@ const Checkout = () => {
           <h2>ที่อยู่สำหรับจัดส่ง</h2>
           <div className="form-group">
             <label htmlFor="name">ชื่อ-นามสกุล</label>
-            <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
           </div>
           <div className="form-group">
             <label htmlFor="address">ที่อยู่</label>
-            <textarea id="address" name="address" value={formData.address} onChange={handleInputChange} required />
+            <textarea
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
+              required
+            />
           </div>
           <div className="form-group">
             <label htmlFor="phone">เบอร์โทรศัพท์</label>
-            <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} required />
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+            />
           </div>
-          
-          <button type="submit" className="place-order-btn" disabled={loading || cartItems.length === 0}>
-            {loading ? 'กำลังดำเนินการ...' : 'ยืนยันคำสั่งซื้อ'}
+
+          <button
+            type="submit"
+            className="place-order-btn"
+            disabled={loading || cartItems.length === 0}
+          >
+            {loading ? "กำลังดำเนินการ..." : "ยืนยันคำสั่งซื้อ"}
           </button>
         </form>
 
         <div className="order-summary-checkout">
           <h2>สรุปรายการ</h2>
-          {cartItems.map(item => (
-            <div key={item.id} className="summary-item"> 
-              <img src={item.images?.[0] || '/images/placeholder.png'} alt={item.name} />
+          {cartItems.map((item) => (
+            <div key={item.id} className="summary-item">
+              <img
+                src={item.images?.[0] || "/images/placeholder.png"}
+                alt={item.name}
+              />
               <div className="item-info">
-                <span>{item.name} (x{item.quantity})</span>
+                <span>
+                  {item.name} (x{item.quantity})
+                </span>
                 <span>Size: {item.size}</span>
               </div>
-              <span className="item-price">{(item.price * item.quantity).toLocaleString()} THB</span>
+              <span className="item-price">
+                {(item.price * item.quantity).toLocaleString()} THB
+              </span>
             </div>
           ))}
           <hr />
