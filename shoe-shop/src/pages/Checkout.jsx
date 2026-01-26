@@ -27,6 +27,7 @@ const Checkout = () => {
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log("CART ITEMS:", cartItems);
 
     const orderData = {
       user_id: user ? user.id : null,
@@ -39,6 +40,7 @@ const Checkout = () => {
         quantity: item.quantity,
         size: item.size,
         price_at_purchase: item.price,
+        image: item.images?.[0] || null,
       })),
     };
 

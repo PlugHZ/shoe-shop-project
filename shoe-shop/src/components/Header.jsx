@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiSearch, FiShoppingCart, FiX } from "react-icons/fi";
+import { FiSearch, FiShoppingCart, FiX, FiPackage } from "react-icons/fi";
 import "./Header.css";
 import ProfileDropdown from "./ProfileDropdown";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const { cartItems } = useCart();
+  const { user } = useAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
@@ -70,6 +72,11 @@ const Header = () => {
               <span className="cart-badge">{totalQuantity}</span>
             )}
           </Link>
+          {user && ( // แสดงเฉพาะตอนล็อกอิน
+            <Link to="/orders" className="icon-btn" title="ประวัติการสั่งซื้อ">
+              <FiPackage size={22} />
+            </Link>
+          )}
         </div>
       </div>
     </header>

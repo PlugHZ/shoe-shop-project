@@ -13,6 +13,7 @@ import ProductForm from "./pages/ProductForm";
 import CategoryPage from "./pages/CategoryPage";
 import EditProduct from "./pages/EditProduct";
 import OrderSuccess from "./pages/OrderSuccess";
+import OrderHistory from "./pages/OrderHistory";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
                 element={<CategoryPage />}
               />
               <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/orders" element={<OrderHistory />} />
             </Routes>
           </main>
 

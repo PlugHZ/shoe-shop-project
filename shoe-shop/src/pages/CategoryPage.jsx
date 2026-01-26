@@ -1,8 +1,7 @@
-// src/pages/CategoryPage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import "./CategoryPage.css"; //
+import "./CategoryPage.css";
 
 // ฟังก์ชัน สำหรับแปลง URL slug เป็นชื่อ Category ที่อยู่ใน DB
 const formatCategoryName = (name) => {
@@ -33,7 +32,9 @@ const CategoryPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch products from server");
@@ -94,7 +95,7 @@ const CategoryPage = () => {
       ) : (
         <div className="product-grid">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} /> 
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
