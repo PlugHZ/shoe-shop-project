@@ -32,13 +32,13 @@ const Header = () => {
         <nav className="main-nav">
           <ul>
             <li>
-              <Link to="/category/football">รองเท้าฟุตบอล</Link>
+              <Link to="/?category=รองเท้าฟุตบอล">รองเท้าฟุตบอล</Link>
             </li>
             <li>
-              <Link to="/category/futsal">รองเท้าฟุตซอล</Link>
+              <Link to="/?category=รองเท้าฟุตซอล">รองเท้าฟุตซอล</Link>
             </li>
             <li>
-              <Link to="/category/running">รองเท้าวิ่ง</Link>
+              <Link to="/?category=รองเท้าวิ่ง">รองเท้าวิ่ง</Link>
             </li>
           </ul>
         </nav>
