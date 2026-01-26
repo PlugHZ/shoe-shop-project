@@ -19,17 +19,41 @@ function isJsonString(str) {
 
 router.get("/", async (req, res) => {
   try {
-    const sql = "SELECT * FROM products";
-    const [results] = await db.query(sql);
+    const { search, category, brand } = req.query;
+    let sql = "SELECT * FROM products WHERE 1=1"; // 1=1 เพื่อให้ต่อ SQL string ได้ง่าย
+    const params = [];
+
+    // กรองตามชื่อสินค้าหรือแบรนด์ (Search)
+    if (search) {
+      sql += " AND (name LIKE ? OR brand LIKE ?)";
+      params.push(`%${search}%`, `%${search}%`);
+    }
+
+    // กรองตามประเภท (Category)
+    if (category && category !== "ทั้งหมด") {
+      sql += " AND category = ?";
+      params.push(category);
+    }
+
+    // กรองตามแบรนด์เฉพาะเจาะจง
+    if (brand) {
+      sql += " AND brand = ?";
+      params.push(brand);
+    }
+
+    sql += " ORDER BY id DESC"; // เรียงสินค้าล่าสุดก่อน
+
+    const [results] = await db.query(sql, params);
 
     const products = results.map((p) => ({
       ...p,
       image_urls: isJsonString(p.image_urls)
         ? JSON.parse(p.image_urls)
         : p.image_urls
-        ? [p.image_urls]
-        : [],
+          ? [p.image_urls]
+          : [],
     }));
+
     res.json(products);
   } catch (err) {
     console.error("Error fetching products:", err);
@@ -52,15 +76,15 @@ router.get("/:id", async (req, res) => {
       image_urls: isJsonString(product.image_urls)
         ? JSON.parse(product.image_urls)
         : product.image_urls
-        ? [product.image_urls]
-        : [],
+          ? [product.image_urls]
+          : [],
       sizes: Array.isArray(product.sizes)
         ? product.sizes
         : isJsonString(product.sizes)
-        ? JSON.parse(product.sizes)
-        : product.sizes
-        ? [product.sizes]
-        : [],
+          ? JSON.parse(product.sizes)
+          : product.sizes
+            ? [product.sizes]
+            : [],
     };
     res.json(formatted);
   } catch (err) {
@@ -92,7 +116,7 @@ router.delete("/:id", async (req, res) => {
       return url;
     });
     const validUrls = allUrlsToProcess.filter(
-      (url) => url && typeof url === "string"
+      (url) => url && typeof url === "string",
     );
     const deleteDbSql = "DELETE FROM products WHERE id = ?";
     const [deleteDbResult] = await db.query(deleteDbSql, [id]);
@@ -105,7 +129,7 @@ router.delete("/:id", async (req, res) => {
       const deletePromises = validUrls.map((url) => deleteFileFromS3(url));
       await Promise.all(deletePromises);
       console.log(
-        `Successfully attempted to delete ${validUrls.length} files from S3.`
+        `Successfully attempted to delete ${validUrls.length} files from S3.`,
       );
     }
     res.json({
@@ -135,7 +159,7 @@ router.put("/:id", upload.array("images", 5), async (req, res) => {
   try {
     const [oldProductResults] = await db.query(
       "SELECT image_urls FROM products WHERE id = ?",
-      [id]
+      [id],
     );
     if (oldProductResults.length === 0) {
       return res.status(404).json({ error: "Product not found" });
@@ -156,7 +180,7 @@ router.put("/:id", upload.array("images", 5), async (req, res) => {
     };
     let oldUrlsInDb = convertToUrlArray(rawOldUrls);
     const oldUrlsSet = new Set(
-      oldUrlsInDb.filter((url) => url && typeof url === "string")
+      oldUrlsInDb.filter((url) => url && typeof url === "string"),
     );
     let existingUrlsFromForm = [];
     if (existing_image_urls) {
@@ -225,7 +249,7 @@ router.post("/", upload.array("images", 5), async (req, res) => {
     let imageUrls = [];
     if (req.files && req.files.length > 0) {
       imageUrls = await Promise.all(
-        req.files.map(async (file) => await uploadFileToS3(file))
+        req.files.map(async (file) => await uploadFileToS3(file)),
       );
     }
 

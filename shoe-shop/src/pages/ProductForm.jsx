@@ -16,16 +16,36 @@ const ProductForm = () => {
   const [category, setCategory] = useState("รองเท้าวิ่ง");
   const navigate = useNavigate();
 
+  // ฟังก์ชันจัดการการเลือกรูป (รองรับการเลือกเพิ่มทีละรูป)
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length > 5) {
+
+    //ตรวจสอบจำนวนรูปรวม (ของเดิม + ที่เลือกใหม่)
+    if (imageFiles.length + files.length > 5) {
       setError("สามารถอัปโหลดได้สูงสุด 5 รูปเท่านั้น");
+      e.target.value = null; // ล้างค่าใน input ทันที
       return;
     }
 
-    setImageFiles(files);
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(previews);
+    setImageFiles((prev) => [...prev, ...files]);
+
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setPreviewImages((prev) => [...prev, ...newPreviews]);
+
+    e.target.value = null;
+    setError("");
+  };
+
+  // ฟังก์ชันสำหรับลบรูปออกจากรายการ
+  const removeImage = (index) => {
+    // ลบไฟล์ออกจาก Array
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+
+    // คืนหน่วยความจำของ URL Preview ที่ลบทิ้ง
+    URL.revokeObjectURL(previewImages[index]);
+
+    // ลบรูปออกจากหน้าจอ
+    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -95,11 +115,11 @@ const ProductForm = () => {
             required
           />
         </div>
+
         <div className="form-group">
           <label htmlFor="category">ประเภทสินค้า</label>
           <select
             id="category"
-            name="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
@@ -107,7 +127,6 @@ const ProductForm = () => {
             <option value="รองเท้าวิ่ง">รองเท้าวิ่ง</option>
             <option value="รองเท้าฟุตบอล">รองเท้าฟุตบอล</option>
             <option value="รองเท้าฟุตซอล">รองเท้าฟุตซอล</option>
-
             <option value="อื่นๆ">อื่นๆ</option>
           </select>
         </div>
@@ -159,24 +178,30 @@ const ProductForm = () => {
           <input
             type="file"
             id="images"
-            name="images"
             accept="image/*"
             multiple
             onChange={handleImageChange}
-            required
           />
         </div>
-
-        {/*  Preview รูป */}
+        {/* แสดงตัวอย่างรูปที่เลือก */}
         {previewImages.length > 0 && (
           <div className="image-preview-container">
             {previewImages.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                alt={`preview ${index + 1}`}
-                className="image-preview"
-              />
+              <div key={index} className="preview-item">
+                <img
+                  src={url}
+                  alt={`preview ${index + 1}`}
+                  className="image-preview"
+                />
+                <button
+                  type="button"
+                  className="remove-image-btn"
+                  onClick={() => removeImage(index)}
+                  title="ลบรูปนี้"
+                >
+                  ✕
+                </button>
+              </div>
             ))}
           </div>
         )}

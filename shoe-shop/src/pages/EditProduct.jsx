@@ -15,8 +15,8 @@ const EditProduct = () => {
   const [sizes, setSizes] = useState("");
 
   const [existingImages, setExistingImages] = useState([]); // URL รูปเก่าที่ยังอยู่
-  const [newImageFiles, setNewImageFiles] = useState([]); // ไฟล์รูปใหม่ที่กำลังจะอัปโหลด
-  const [previewNewImages, setPreviewNewImages] = useState([]); // สำหรับแสดงพรีวิวรูปใหม่
+  const [newImageFiles, setNewImageFiles] = useState([]); // ไฟล์รูปใหม่ที่เลือกเพิ่ม
+  const [previewNewImages, setPreviewNewImages] = useState([]);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -26,9 +26,9 @@ const EditProduct = () => {
     const fetchProductData = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/products/${id}`
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`,
         );
-        if (!response.ok) throw new Error("Product not found");
+        if (!response.ok) throw new Error("ไม่พบข้อมูลสินค้า");
         const data = await response.json();
 
         setName(data.name || "");
@@ -47,8 +47,8 @@ const EditProduct = () => {
 
         setExistingImages(cleanedImageUrls || []);
       } catch (err) {
-        setError("Failed to load product data.");
-        console.error("Error fetching product:", err);
+        setError("ไม่สามารถโหลดข้อมูลสินค้าได้");
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -57,26 +57,44 @@ const EditProduct = () => {
     fetchProductData();
   }, [id]);
 
-  //จัดการรูปภาพใหม่แสดงพรีวิว
+  // จัดการเลือกรูปใหม่เพิ่ม
   const handleNewImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setNewImageFiles(files);
+    // ตรวจสอบจำนวนรวม
+    if (existingImages.length + newImageFiles.length + files.length > 5) {
+      setError("สินค้านี้สามารถมีรูปได้สูงสุด 5 รูปเท่านั้น");
+      e.target.value = null;
+      return;
+    }
+    setNewImageFiles((prev) => [...prev, ...files]);
 
     // สร้าง URL สำหรับ Preview รูปใหม่
     const previewUrls = files.map((file) => URL.createObjectURL(file));
-    setPreviewNewImages(previewUrls);
+    setPreviewNewImages((prev) => [...prev, ...previewUrls]);
+    e.target.value = null;
+    setError("");
   };
 
-  //จัดการลบรูปเก่าออกจากฟอร์ม
+  //ลบรูปเก่าออก
   const handleRemoveExistingImage = (urlToRemove) => {
     // ลบ URL
     setExistingImages((prev) => prev.filter((url) => url !== urlToRemove));
+  };
+  //ลบรูปใหม่ที่เลือกมาออก
+  const removeNewImage = (index) => {
+    setNewImageFiles((prev) => prev.filter((_, i) => i !== index));
+    URL.revokeObjectURL(previewNewImages[index]);
+    setPreviewNewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   //การส่งฟอร์ม
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (existingImages.length + newImageFiles.length === 0) {
+      setError("กรุณาให้มีรูปภาพเหลืออยู่อย่างน้อย 1 รูป");
+      return;
+    }
     setLoading(true);
 
     const formData = new FormData();
@@ -87,7 +105,6 @@ const EditProduct = () => {
     formData.append("price", price);
     formData.append("stock", stock);
     formData.append("sizes", sizes);
-
     //ส่ง URL รูปเก่าที่ยังเหลืออยู่ ไปให้ Backend
     formData.append("existing_image_urls", JSON.stringify(existingImages));
 
@@ -102,7 +119,7 @@ const EditProduct = () => {
         {
           method: "PUT", //ใช้PUTสำหรับการแก้ไข
           body: formData,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -113,8 +130,7 @@ const EditProduct = () => {
       alert("แก้ไขสินค้าสำเร็จ!");
       navigate(`/product/${id}`); // กลับไปหน้าสินค้าที่แก้ไข
     } catch (err) {
-      setError(err.message || "Failed to submit form");
-      console.error("Error submitting form:", err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -225,12 +241,12 @@ const EditProduct = () => {
           />
         </div>
 
-        {/*แสดงรูปภาพเดิมและปุ่มลบ */}
+        {/* รูปเก่าในระบบ */}
         <div className="form-group">
-          <label>รูปภาพปัจจุบัน (คลิกเพื่อลบ)</label>
-          <div className="image-preview-container existing-images">
+          <label>รูปภาพปัจจุบัน (ในระบบ)</label>
+          <div className="image-preview-container">
             {existingImages.map((url, index) => (
-              <div key={index} className="image-preview-wrapper">
+              <div key={`existing-${index}`} className="preview-item">
                 <img
                   src={url}
                   alt={`Existing ${index + 1}`}
@@ -240,39 +256,50 @@ const EditProduct = () => {
                   type="button"
                   onClick={() => handleRemoveExistingImage(url)}
                   className="remove-image-btn"
+                  title="ลบรูปเดิม"
                 >
-                  X
+                  ✕
                 </button>
               </div>
             ))}
           </div>
         </div>
 
-        {/*อัปโหลดรูปภาพใหม่ */}
+        {/* เลือกรูปใหม่ */}
         <div className="form-group">
-          <label htmlFor="new-images">อัปโหลดรูปภาพเพิ่มเติม/แทนที่</label>
+          <label htmlFor="new-images">
+            อัปโหลดรูปภาพเพิ่มเติม (สูงสุดรวม 5 รูป)
+          </label>
           <input
             type="file"
             id="new-images"
-            name="images"
-            onChange={handleNewImageChange}
             multiple
             accept="image/*"
+            onChange={handleNewImageChange}
           />
         </div>
 
-        {/*พรีวิวรูปภาพใหม่ */}
+        {/* พรีวิวรูปใหม่ */}
         {previewNewImages.length > 0 && (
           <div className="form-group">
-            <label>พรีวิวรูปภาพใหม่</label>
-            <div className="image-preview-container new-images">
+            <label>พรีวิวรูปภาพใหม่ที่กำลังจะเพิ่ม</label>
+            <div className="image-preview-container">
               {previewNewImages.map((url, index) => (
-                <img
-                  key={index}
-                  src={url}
-                  alt={`New Preview ${index + 1}`}
-                  className="image-preview"
-                />
+                <div key={`new-${index}`} className="preview-item">
+                  <img
+                    src={url}
+                    alt={`New Preview ${index + 1}`}
+                    className="image-preview"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeNewImage(index)}
+                    className="remove-image-btn"
+                    title="ลบรูปใหม่"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
             </div>
           </div>

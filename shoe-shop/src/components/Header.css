@@ -12,11 +12,11 @@
   font-size: 1.8rem;
   font-weight: bold;
   color: var(--primary-color);
-  text-decoration: none; /* เอาขีดเส้นใต้ออก */
-  
+  text-decoration: none;
 }
 .main-nav ul {
-  list-style: none; display: flex;
+  list-style: none;
+  display: flex;
   gap: 2rem;
 }
 .main-nav a {
@@ -30,20 +30,21 @@
 }
 .header-icons {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.2rem;
   cursor: pointer;
   color: white;
   align-items: center;
 }
 .cart-icon-wrapper {
-  color: white; 
+  color: white;
   text-decoration: none;
-  position: relative; 
-  display: flex; 
+  position: relative;
+  display: flex;
+  align-items: center;
   transition: color 0.3s ease;
 }
 .cart-icon-wrapper:hover {
-  color: var(--primary-color); 
+  color: var(--primary-color);
 }
 .cart-badge {
   position: absolute;
@@ -61,4 +62,58 @@
   justify-content: center;
   align-items: center;
   line-height: 1;
+}
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+.search-form input {
+  background-color: #222;
+  border: 1px solid var(--primary-color);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  width: 180px;
+  outline: none;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.search-form input:focus {
+  box-shadow: 0 0 5px var(--primary-color);
+}
+.icon-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  transition:
+    color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
