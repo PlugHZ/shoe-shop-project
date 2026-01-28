@@ -1,13 +1,12 @@
 .profile-dropdown-container {
-  position: relative; /* สำคัญมากสำหรับตำแหน่งของเมนู */
+  position: relative;
+  z-index: 1001; /* เพิ่มให้สูงกว่า Header */
 }
-
-/* ปุ่มไอคอน (ที่ครอบ FiUser) */
 .icon-button {
   background: none;
   border: none;
   cursor: pointer;
-  color: white; 
+  color: white;
   display: flex;
   align-items: center;
   padding: 0;
@@ -15,91 +14,189 @@
 }
 
 .icon-button:hover {
-  color: #f0b90b; 
+  color: var(--primary-color, #f0b90b);
 }
 
 /* กล่องเมนู Dropdown */
 .dropdown-menu {
   position: absolute;
-  top: 150%;
-  right: -100px; /* เริ่มจากกึ่งกลาง */
-  
+  top: 160%;
+  right: -100px; /* Desktop: จัดกึ่งกลางเทียบกับไอคอน */
+
   width: 280px;
-  background-color: #212121; 
-  border-radius: 8px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  background-color: #212121;
+  border: 1px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   padding: 1rem;
-  z-index: 100;
+  z-index: 1002;
   text-align: center;
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 110px;
+  width: 12px;
+  height: 12px;
+  background-color: #212121;
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  transform: rotate(45deg);
 }
 
 /* ปุ่มและ Link ภายในเมนู */
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 12px;
+  padding: 10px 12px;
   margin: 0.5rem 0;
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all 0.2s ease;
-  border: 1px solid #f0b90b;
-  background-color: #f0b90b; 
+  border: 1px solid var(--primary-color, #f0b90b);
+  background-color: var(--primary-color, #f0b90b);
   color: #1a1a1a;
   cursor: pointer;
 }
 
 .dropdown-item.alt {
-  background-color: transparent; /* ปุ่มรองพื้นหลังโปร่งใส */
-  color: #f0b90b;
+  background-color: transparent;
+  color: var(--primary-color, #f0b90b);
 }
 
 .dropdown-item:hover {
   filter: brightness(1.1);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 185, 11, 0.2);
 }
 
 .dropdown-item.alt:hover {
   background-color: rgba(240, 185, 11, 0.1);
+  box-shadow: none;
 }
 
-/* ข้อความคั่น */
 .separator {
-  color: #a0a0a0;
-  font-size: 0.9rem;
-  margin: 1.2rem 0;
-  line-height: 1.5;
+  color: #666;
+  font-size: 0.85rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.separator::before,
+.separator::after {
+  content: "";
+  height: 1px;
+  background-color: #444;
+  flex: 1;
+  margin: 0 10px;
 }
 
-/* ส่วนแสดงข้อมูล User ที่ล็อกอินแล้ว */
 .user-info {
   color: #ccc;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid #333;
 }
 
 .user-info strong {
   color: #fff;
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 4px;
 }
 
-/* ปุ่ม Logout */
+.user-info small {
+  font-size: 0.85rem;
+  color: #888;
+}
+
 .dropdown-item.logout {
-  background-color: #d9534f;
-  border-color: #d43f3a;
+  background-color: #2a1a1a;
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+  margin-top: 1rem;
+}
+.dropdown-item.logout:hover {
+  background-color: #ff4d4d;
   color: white;
 }
 
-/* Animation ตอนเปิดเมนู */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  /*ตัวเมนู ลอยอยู่มุมขวาบน */
+  .profile-dropdown-container {
+    position: static; /* รีเซ็ตเพื่อให้ position: fixed ของลูกทำงานเทียบกับหน้าจอ */
+  }
+
+  .dropdown-menu {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    left: auto;
+    width: 200px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 1rem;
+    z-index: 2000;
+
+    transform-origin: top right;
+    animation: scaleInMobile 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .dropdown-menu::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -6px;
+    right: 90px;
+    width: 12px;
+    height: 12px;
+    background-color: #1e1e1e;
+    border-top: 1px solid #333;
+    border-left: 1px solid #333;
+    transform: rotate(45deg);
+    z-index: 2001;
+  }
+  /* ปรับขนาดตัวหนังสือในมือถือ */
+  .user-info strong {
+    font-size: 1rem;
+    color: #fff;
+  }
+  .dropdown-item {
+    font-size: 0.9rem;
+    padding: 10px;
+    margin-bottom: 5px;
+  }
+
+  .dropdown-item.logout {
+    margin-top: 10px;
+  }
+  @keyframes scaleInMobile {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
   }
 }

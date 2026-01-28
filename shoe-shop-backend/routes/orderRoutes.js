@@ -2,7 +2,42 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 
-/*  GET ประวัติการสั่งซื้อของผู้ใช้*/
+/* GET ดึงรายการออเดอร์ทั้งหมด (สำหรับ Admin Dashboard) */
+router.get("/", async (req, res) => {
+  try {
+    // ดึงข้อมูล orders ทั้งหมด เรียงจากล่าสุดไปเก่าสุด
+    // เลือก created_at มาเป็นชื่อ 'date' เพื่อให้ตรงกับ frontend admin ที่เราเขียน
+    const sql = `
+      SELECT *, created_at AS date 
+      FROM orders 
+      ORDER BY id DESC
+    `;
+
+    const [rows] = await db.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching all orders:", err);
+    res.status(500).json({ error: "Failed to fetch orders" });
+  }
+});
+
+/*  PUT อัปเดตสถานะออเดอร์ (สำหรับ Admin กดเปลี่ยนสถานะ) */
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body; // รับค่า status เช่น 'shipped', 'completed'
+
+  try {
+    const sql = "UPDATE orders SET status = ? WHERE id = ?";
+    await db.query(sql, [status, id]);
+
+    res.json({ message: "Order status updated successfully", id, status });
+  } catch (err) {
+    console.error("Error updating order status:", err);
+    res.status(500).json({ error: "Failed to update status" });
+  }
+});
+
+/* GET ประวัติการสั่งซื้อของผู้ใช้ */
 router.get("/user/:userId", async (req, res) => {
   const { userId } = req.params;
 
@@ -49,7 +84,7 @@ router.get("/user/:userId", async (req, res) => {
         quantity: row.quantity,
         size: row.size,
         price: row.price_at_purchase,
-        image: row.image || null, //ใช้จาก order_items โดยตรง
+        image: row.image || null,
       });
     });
 
@@ -60,7 +95,7 @@ router.get("/user/:userId", async (req, res) => {
   }
 });
 
-/*  POST สร้างคำสั่งซื้อใหม่ */
+/* POST สร้างคำสั่งซื้อใหม่ */
 router.post("/", async (req, res) => {
   const {
     user_id,
@@ -74,7 +109,7 @@ router.post("/", async (req, res) => {
   try {
     await db.beginTransaction();
 
-    //สร้าง order
+    // สร้าง order
     const orderSql = `
       INSERT INTO orders 
       (user_id, customer_name, shipping_address, phone, total_price)
@@ -91,7 +126,7 @@ router.post("/", async (req, res) => {
 
     const orderId = orderResult.insertId;
 
-    //สร้าง order_items รวม image
+    // สร้าง order_items รวม image
     const itemSql = `
       INSERT INTO order_items
       (order_id, product_id, quantity, size, price_at_purchase, image)
@@ -105,11 +140,11 @@ router.post("/", async (req, res) => {
         item.quantity,
         item.size,
         item.price_at_purchase,
-        item.image || null, //รูปจาก Checkout
+        item.image || null,
       ]);
     }
 
-    //ล้าง cart
+    // ล้าง cart
     if (user_id) {
       await db.query("DELETE FROM cart_items WHERE user_id = ?", [user_id]);
     }

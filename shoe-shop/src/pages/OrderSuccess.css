@@ -3,55 +3,63 @@
   justify-content: center;
   align-items: center;
   min-height: 80vh;
-  padding: 2rem;
+  padding: 1rem; 
 }
 
 .success-card {
   background-color: #1e1e1e;
   padding: 3rem;
-  border-radius: 12px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+  max-width: 450px;
   width: 100%;
   border-top: 5px solid var(--primary-color, #ffcc00);
+  animation: slideUp 0.5s ease-out;
 }
 
 .success-icon {
-  color: #28a745;
+  color: #28a745; 
   margin-bottom: 1.5rem;
-  animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
 .success-card h1 {
   color: #fff;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
 }
 
 .success-message {
-  color: #ccc;
+  color: #aaa;
   margin-bottom: 2rem;
   line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .order-info {
   background-color: #2a2a2a;
-  padding: 1rem;
-  border-radius: 8px;
+  padding: 1.5rem;
+  border-radius: 12px;
   margin-bottom: 2rem;
+  border: 1px dashed #444; 
 }
 
 .order-info p {
   color: #888;
   margin: 0;
   font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .order-id {
   color: var(--primary-color, #ffcc00);
   margin: 0.5rem 0 0;
-  font-family: monospace;
-  font-size: 1.8rem;
+  font-family: "Courier New", monospace; 
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
 
 .action-buttons {
@@ -64,43 +72,77 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
+  padding: 1rem;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
-  transition: transform 0.2s;
+  transition: all 0.2s;
+  font-size: 1rem;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary {
   background-color: var(--primary-color, #ffcc00);
-  color: #000;
+  color: #121212;
+  border: none;
 }
 
 .btn-secondary {
   background-color: transparent;
-  border: 2px solid #555;
+  border: 1px solid #555;
   color: #fff;
 }
 
 .btn-secondary:hover {
   border-color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .btn-icon {
-  margin-right: 8px;
+  margin-right: 10px;
+  font-size: 1.2rem;
 }
+
 
 @keyframes popIn {
   0% {
     transform: scale(0);
     opacity: 0;
   }
+  80% {
+    transform: scale(1.1);
+  }
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .success-card {
+    padding: 2rem 1.5rem; /
+  }
+
+  .success-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .order-id {
+    font-size: 1.5rem;
   }
 }

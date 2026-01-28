@@ -21,7 +21,7 @@ const ProductDetail = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/products/${id}`
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`,
         );
         if (!response.ok) throw new Error("Product not found");
 
@@ -51,7 +51,7 @@ const ProductDetail = () => {
   const handleDelete = async () => {
     if (
       !window.confirm(
-        `คุณแน่ใจหรือไม่ที่จะลบสินค้า: ${product.name} (ID: ${product.id})?`
+        `คุณแน่ใจหรือไม่ที่จะลบสินค้า: ${product.name} (ID: ${product.id})?`,
       )
     ) {
       return;
@@ -59,20 +59,23 @@ const ProductDetail = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to delete product");
       }
 
-      alert(" สินค้าถูกลบสำเร็จ!");
+      alert("สินค้าถูกลบสำเร็จ!");
       navigate("/");
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert(` ไม่สามารถลบสินค้าได้: ${error.message}`);
+      alert(`ไม่สามารถลบสินค้าได้: ${error.message}`);
       setLoading(false);
     }
   };
@@ -88,15 +91,19 @@ const ProductDetail = () => {
 
   if (loading)
     return (
-      <h2 className="container" style={{ padding: "3rem 0" }}>
-        กำลังโหลด...
-      </h2>
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <h2>กำลังโหลดข้อมูลสินค้า...</h2>
+      </div>
     );
   if (!product)
     return (
-      <h2 className="container" style={{ padding: "3rem 0" }}>
-        ไม่พบสินค้า
-      </h2>
+      <div className="error-container">
+        <h2>ไม่พบสินค้าที่คุณค้นหา</h2>
+        <Link to="/" className="back-btn">
+          กลับสู่หน้าหลัก
+        </Link>
+      </div>
     );
 
   const availableSizes = product.sizes || [];
@@ -106,126 +113,126 @@ const ProductDetail = () => {
     : rawImages;
 
   return (
-    <div className="product-detail-container container">
-      <div className="image-gallery">
-        <div className="thumbnails">
-          {availableImages.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt={`${product.name} thumbnail ${index + 1}`}
-              onClick={() => setMainImage(img)}
-              className={mainImage === img ? "active" : ""}
-            />
-          ))}
+    <div className="product-detail-page">
+      <div className="product-detail-card">
+        {/* โซนรูปภาพ  */}
+        <div className="image-gallery">
+          <div className="main-image">
+            {mainImage ? (
+              <img src={mainImage} alt={product.name} />
+            ) : (
+              <div className="no-image">No Image</div>
+            )}
+          </div>
+          <div className="thumbnails">
+            {availableImages.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`thumb-${index}`}
+                onClick={() => setMainImage(img)}
+                className={mainImage === img ? "active" : ""}
+              />
+            ))}
+          </div>
         </div>
-        <div className="main-image">
-          {mainImage && <img src={mainImage} alt={product.name} />}
+
+        {/* โซนข้อมูลสินค้า */}
+        <div className="product-info-details">
+          <div className="product-header">
+            <p className="brand">{product.brand}</p>
+            <h1>{product.name}</h1>
+            <div className="price-tag">
+              {Number(product.price).toLocaleString()} <small>THB</small>
+            </div>
+            {product.category && (
+              <span className="category-badge">{product.category}</span>
+            )}
+          </div>
+
+          <div className="divider"></div>
+
+          {/* เลือกไซส์ */}
+          {availableSizes.length > 0 && (
+            <div className="selector-group">
+              <p className="label">เลือกไซส์:</p>
+              <div className="size-options">
+                {availableSizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`size-btn ${selectedSize === size ? "selected" : ""}`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* เลือกจำนวน */}
+          <div className="selector-group">
+            <p className="label">จำนวน:</p>
+            <div className="quantity-wrapper">
+              <div className="quantity-controls">
+                <button
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+                <input type="text" value={quantity} readOnly />
+                <button
+                  onClick={() =>
+                    setQuantity((prev) => Math.min(product.stock, prev + 1))
+                  }
+                  disabled={quantity >= product.stock}
+                >
+                  +
+                </button>
+              </div>
+              <span className="stock-label">มีสินค้า {product.stock} ชิ้น</span>
+            </div>
+          </div>
+
+          <div className="divider"></div>
+
+          {/* รายละเอียด */}
+          <div className="product-description">
+            <h3>รายละเอียดสินค้า</h3>
+            <p>{product.description || "ไม่มีรายละเอียดเพิ่มเติม"}</p>
+          </div>
+
+          {/* Admin Actions (ปุ่มแก้ไข/ลบ) */}
+          {user?.role === "admin" && (
+            <div className="admin-section">
+              <h3>Admin Management</h3>
+              <div className="admin-actions">
+                <Link to={`/product/edit/${id}`} className="admin-btn edit">
+                  ✏️ แก้ไขสินค้า
+                </Link>
+                <button onClick={handleDelete} className="admin-btn delete">
+                  🗑️ ลบสินค้า
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="product-info-details">
-        <p className="brand">{product.brand}</p>
-        <h1>{product.name}</h1>
-        {product.category && (
-            <p className="category-tag" style={{ fontSize: '0.9rem', color: '#6c757d', marginBottom: '5px' }}>
-                ประเภท: <strong>{product.category}</strong>
-            </p>
-        )}
-        <p className="status">
-          สถานะของสินค้า : {product.status || "สินค้าพร้อมส่ง"}
-        </p>
-        <p className="price">{product.price.toLocaleString()} THB</p>
-
-        {availableSizes.length > 0 && (
-          <div className="size-selector">
-            <p>Size :</p>
-            <div className="sizes">
-              {availableSizes.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={selectedSize === size ? "active" : ""}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="quantity-selector">
-          <p>จำนวน:</p>
-          <div className="quantity-controls">
-            <button
-              onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-              disabled={quantity <= 1}
-            >
-              -
-            </button>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => {
-                const val = Math.max(
-                  1,
-                  Math.min(product.stock, Number(e.target.value))
-                );
-                setQuantity(val);
-              }}
-              min="1"
-              max={product.stock} 
-              readOnly 
-            />
-            <button
-              onClick={() =>
-                setQuantity((prev) => Math.min(product.stock, prev + 1))
-              }
-              disabled={quantity >= product.stock} 
-            >
-              +
-            </button>
-          </div>
-          {product.stock === 0 && <p className="stock-out">สินค้าหมดสต็อก</p>}
-          {product.stock > 0 && (
-            <p className="stock-info">({product.stock} ชิ้นในสต็อก)</p>
-          )}
-        </div>
-
-        <div className="action-buttons">
-          <button
-            className="add-to-cart-btn"
-            onClick={handleAddToCart}
-            disabled={
-              !selectedSize || quantity > product.stock || product.stock === 0
-            }
-          >
-            เพิ่มลงตะกร้า ({quantity})
-          </button>
-        </div>
-
-        <div className="product-description">
-          <h3>รายละเอียดสินค้า</h3>
-          <p>{product.description || "ไม่มีรายละเอียดสินค้า"}</p>
-        </div>
-
-        {user?.role === "admin" && (
-          <div className="admin-actions">
-            <Link to={`/product/edit/${id}`} style={{ textDecoration: "none" }}>
-              <button className="edit-product-btn" disabled={loading}>
-                แก้ไขสินค้า
-              </button>
-            </Link>
-
-            <button
-              className="delete-btn"
-              onClick={handleDelete}
-              disabled={loading}
-            >
-              {loading ? "กำลังลบ..." : "ลบสินค้า"}
-            </button>
-          </div>
-        )}
+      {/* Sticky Bottom Bar for Mobile */}
+      <div className="sticky-footer-bar">
+        <button
+          className="add-to-cart-btn"
+          onClick={handleAddToCart}
+          disabled={
+            !selectedSize || quantity > product.stock || product.stock === 0
+          }
+        >
+          {product.stock === 0
+            ? "สินค้าหมด"
+            : `เพิ่มลงตะกร้า • ฿${(product.price * quantity).toLocaleString()}`}
+        </button>
       </div>
     </div>
   );

@@ -2,32 +2,56 @@
   background-color: var(--surface-color);
   padding: 1rem 0;
   border-bottom: 3px solid var(--primary-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
+
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
+
 .logo {
   font-size: 1.8rem;
   font-weight: bold;
   color: var(--primary-color);
   text-decoration: none;
+  white-space: nowrap;
 }
+
+/* ซ่อนปุ่ม Hamburger ในหน้าจอคอม*/
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+}
+
 .main-nav ul {
   list-style: none;
   display: flex;
   gap: 2rem;
+  margin: 0;
+  padding: 0;
 }
+
 .main-nav a {
   color: var(--text-color);
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
+
 .main-nav a:hover {
   color: var(--primary-color);
 }
+
 .header-icons {
   display: flex;
   gap: 1.2rem;
@@ -35,6 +59,7 @@
   color: white;
   align-items: center;
 }
+
 .cart-icon-wrapper {
   color: white;
   text-decoration: none;
@@ -43,9 +68,11 @@
   align-items: center;
   transition: color 0.3s ease;
 }
+
 .cart-icon-wrapper:hover {
   color: var(--primary-color);
 }
+
 .cart-badge {
   position: absolute;
   top: -8px;
@@ -63,6 +90,7 @@
   align-items: center;
   line-height: 1;
 }
+
 .search-wrapper {
   display: flex;
   align-items: center;
@@ -90,6 +118,7 @@
 .search-form input:focus {
   box-shadow: 0 0 5px var(--primary-color);
 }
+
 .icon-btn {
   background: none;
   border: none;
@@ -107,6 +136,7 @@
   color: var(--primary-color);
   transform: scale(1.1);
 }
+
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -115,5 +145,85 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  /* แสดงปุ่ม Hamburger และจัดลำดับใหม่ */
+  .menu-toggle {
+    display: block;
+    order: 1;
+  }
+
+  .logo {
+    order: 2;
+    font-size: 1.4rem;
+    margin-left: 10px;
+    margin-right: auto;
+  }
+
+  .header-icons {
+    order: 3;
+    gap: 0.8rem;
+  }
+
+  /* แปลง Navbar ให้เป็น Mobile Dropdown */
+  .main-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--surface-color);
+    border-bottom: 2px solid var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    z-index: 999;
+  }
+
+  /* คลาสนี้จะถูกเพิ่มโดย React เมื่อ isMenuOpen = true */
+  .main-nav.active {
+    display: block;
+    animation: slideDown 0.3s ease;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .main-nav li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .main-nav a {
+    display: block;
+    padding: 1rem;
+    border-bottom: 1px solid #333;
+  }
+
+  .main-nav a:hover {
+    background-color: #222;
+  }
+
+  .search-form input {
+    width: 120px;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .header-container {
+    padding: 0 10px;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

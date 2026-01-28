@@ -1,36 +1,39 @@
-/* src/pages/Checkout.css */
-
 .checkout-container {
   padding: 3rem 0;
+  min-height: 80vh;
 }
 
 .checkout-container h1 {
   text-align: center;
   margin-bottom: 2rem;
   color: var(--primary-color);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+/* Layout หลัก ซ้ายฟอร์มขวาสรุปยอด */
 .checkout-layout {
   display: grid;
-  grid-template-columns: 1.5fr 1fr; /* ให้ฟอร์มกว้างกว่าสรุปยอด */
-  gap: 2rem;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 3rem;
   align-items: start;
 }
 
-@media (max-width: 992px) {
-  .checkout-layout {
-    grid-template-columns: 1fr; /* 1 คอลัมน์บนจอเล็ก */
-  }
-  .order-summary-checkout {
-    margin-top: 2rem;
-    order: -1; /* สลับให้สรุปยอดอยู่ด้านบน */
-  }
+/*Form Styling  */
+.shipping-form {
+  background-color: var(--surface-color);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #333;
 }
 
 .shipping-form h2 {
   margin-bottom: 1.5rem;
-  color: var(--text-color);
-  font-weight: 500;
+  color: #fff;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
 }
 
 .form-group {
@@ -39,23 +42,32 @@
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-secondary-color);
+  margin-bottom: 0.6rem;
+  color: #ccc;
+  font-weight: 500;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;
-  background-color: var(--surface-color);
-  border: 1px solid #555;
-  border-radius: 4px;
-  color: var(--text-color);
+  padding: 0.9rem;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: white;
   font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(253, 224, 71, 0.3);
 }
 
 .form-group textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
 }
 
@@ -63,75 +75,142 @@
   background: var(--primary-color);
   color: #121212;
   border: none;
-  padding: 1rem;
+  padding: 1.2rem;
   width: 100%;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 800;
   cursor: pointer;
-  border-radius: 4px;
-  margin-top: 1rem;
-  transition: background-color 0.3s ease;
-}
-.place-order-btn:hover {
-  background-color: #ffd900;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+.place-order-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 15px rgba(253, 224, 71, 0.3);
+}
+
+.place-order-btn:disabled {
+  background-color: #444;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/*  Order Summary Box */
 .order-summary-checkout {
   background-color: var(--surface-color);
-  padding: 1.5rem;
-  border-radius: 8px;
+  padding: 2rem;
+  border-radius: 12px;
   border: 1px solid #333;
+  position: sticky;
+  top: 100px;
 }
 
 .order-summary-checkout h2 {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: var(--text-color);
+  color: #fff;
+  font-size: 1.4rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
 }
 
 .summary-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
 }
 
 .summary-item img {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: white;
+  padding: 2px;
 }
 
 .summary-item .item-info {
   flex-grow: 1;
 }
-.summary-item .item-info span {
+
+.summary-item .item-info span:first-child {
   display: block;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
 }
+
 .summary-item .item-info span:last-child {
-  font-size: 0.8rem;
-  color: var(--text-secondary-color);
+  font-size: 0.85rem;
+  color: #aaa;
 }
 
 .summary-item .item-price {
   font-weight: bold;
-}
-
-.order-summary-checkout hr {
-  border: none;
-  border-top: 1px solid #333;
-  margin: 1.5rem 0;
+  color: var(--primary-color);
+  white-space: nowrap;
 }
 
 .summary-total {
   display: flex;
   justify-content: space-between;
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #333;
 }
+
 .summary-total span:last-child {
   color: var(--primary-color);
+}
+
+@media (max-width: 992px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .order-summary-checkout {
+    order: -1;
+    position: static;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 1.5rem 0;
+  }
+
+  .shipping-form,
+  .order-summary-checkout {
+    padding: 1.5rem;
+  }
+
+  .place-order-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0;
+    z-index: 100;
+    padding: 1.5rem;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+    margin: 0;
+  }
+  /* ดันเนื้อหาขึ้นไปเพื่อไม่ให้ปุ่มบัง */
+  .checkout-container {
+    padding-bottom: 80px;
+  }
 }

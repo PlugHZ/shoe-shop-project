@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './AuthForm.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./AuthForm.css";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     try {
       await login(email, password);
-      navigate('/');
+      navigate("/");
     } catch (err) {
-      setError('Failed to log in. Please check your email and password.');
+      setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง");
       console.error("Failed to log in:", err);
     }
   };
@@ -25,19 +25,21 @@ const Login = () => {
   return (
     <div className="auth-page">
       <div className="auth-image-section login-bg">
-        {/* รูปภาพ */}
+        <div className="auth-overlay">
+          <h1>Welcome Back!</h1>
+          <p>เข้าสู่ระบบเพื่อเลือกซื้อรองเท้าคู่โปรดของคุณ</p>
+        </div>
       </div>
       <div className="auth-form-section">
         <div className="auth-container">
-          <h2>Welcome Back!</h2>
-          <p>Log in to your shoe shop account</p>
-          
-          <form onSubmit={handleSubmit}>
+          <h2>เข้าสู่ระบบ</h2>
+          <p>ยินดีต้อนรับกลับสู่ CPE Shop</p>
 
+          <form onSubmit={handleSubmit}>
             {error && <p className="error-message">{error}</p>}
 
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">อีเมล</label>
               <input
                 id="email"
                 type="email"
@@ -49,7 +51,7 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">รหัสผ่าน</label>
               <input
                 id="password"
                 type="password"
@@ -60,13 +62,16 @@ const Login = () => {
               />
             </div>
 
-           
-            
-            <button type="submit" className="auth-button">Log In</button>
+            <button type="submit" className="auth-button">
+              เข้าสู่ระบบ
+            </button>
           </form>
 
           <div className="bottom-link">
-            Don't have an account? <Link to="/signup">Sign Up</Link>
+            ยังไม่มีบัญชีใช่ไหม? <Link to="/signup">สมัครสมาชิก</Link>
+          </div>
+          <div className="back-home">
+            <Link to="/">← กลับหน้าหลัก</Link>
           </div>
         </div>
       </div>

@@ -1,30 +1,46 @@
-/* ใช้ Google Font เพื่อความสวยงาม */
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap");
-
 :root {
-  --primary-color: #fde047; /* สีเหลือง */
+  --primary-color: #fde047;
   --background-color: #121212;
   --surface-color: #1e1e1e;
   --text-color: #ffffff;
   --text-secondary-color: #a0a0a0;
-  --sale-color: #ef4444; /* สีแดงสำหรับป้ายลดราคา */
+  --sale-color: #ef4444;
 }
 
+/*  Resetค่าพื้นฐานให้ครอบคลุมขึ้น */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/*  รูปภาพห้ามล้นจอ */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ฟอร์มต้องใช้ฟอนต์เดียวกับเว็บ */
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+}
+
 body {
   font-family: "Kanit", sans-serif;
   background-color: var(--background-color);
-  background-image: url("/images/bg1.jpg"); /* background image */
+  background-image: url("/images/bg1.jpg");
   background-size: cover;
   background-attachment: fixed;
+  background-position: center;
   color: var(--text-color);
   overflow-x: hidden;
   min-width: 320px;
+  line-height: 1.5;
 }
 
 .container {
@@ -32,15 +48,17 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
+
 .app-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* สูงอย่างน้อยเท่าหน้าจอ */
+  min-height: 100vh;
 }
 
 main {
-  flex-grow: 1; /* ให้ main ขยายเต็มพื้นที่ว่างเพื่อดัน footer ลงไป */
+  flex-grow: 1;
 }
+
 .admin-controls {
   padding: 1rem 0;
   text-align: right;
@@ -54,19 +72,41 @@ main {
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  display: inline-block;
 }
-
 .add-product-btn:hover {
   background-color: #ffd900;
 }
+
 @media (max-width: 768px) {
   body {
     font-size: 14px;
   }
 
+  /*  ปรับContainerให้กว้างขึ้นบนมือถือ*/
   .container {
     width: 100%;
+    padding: 0 16px;
+  }
 
-    padding: 0 10px;
+  /* ปรับหัวข้อไม่ให้ใหญ่คับจอ */
+  h1 {
+    font-size: 1.8rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  /* ปรับปุ่ม Add Product ให้เต็มจอ กดง่าย */
+  .admin-controls {
+    text-align: center;
+  }
+  .add-product-btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
   }
 }

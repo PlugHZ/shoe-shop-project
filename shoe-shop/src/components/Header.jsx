@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiSearch, FiShoppingCart, FiX, FiPackage } from "react-icons/fi";
+import {
+  FiSearch,
+  FiShoppingCart,
+  FiX,
+  FiPackage,
+  FiMenu,
+  FiSettings,
+} from "react-icons/fi";
 import "./Header.css";
 import ProfileDropdown from "./ProfileDropdown";
 import { useCart } from "../context/CartContext";
@@ -9,6 +16,7 @@ import { useAuth } from "../context/AuthContext";
 const Header = () => {
   const { cartItems } = useCart();
   const { user } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
@@ -22,25 +30,39 @@ const Header = () => {
       navigate(`/?search=${encodeURIComponent(keyword.trim())}`);
       setIsSearchOpen(false);
       setKeyword("");
+      setIsMenuOpen(false);
     }
   };
+  const closeMenu = () => setIsMenuOpen(false);
   return (
     <header className="header">
       <div className="header-container container">
-        <Link to="/" className="logo">
+        <button
+          className="menu-toggle"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        </button>
+        <Link to="/" className="logo" onClick={closeMenu}>
           CPE SHOP
         </Link>
 
-        <nav className="main-nav">
+        <nav className={`main-nav ${isMenuOpen ? "active" : ""}`}>
           <ul>
             <li>
-              <Link to="/?category=รองเท้าฟุตบอล">รองเท้าฟุตบอล</Link>
+              <Link to="/?category=รองเท้าฟุตบอล" onClick={closeMenu}>
+                รองเท้าฟุตบอล
+              </Link>
             </li>
             <li>
-              <Link to="/?category=รองเท้าฟุตซอล">รองเท้าฟุตซอล</Link>
+              <Link to="/?category=รองเท้าฟุตซอล" onClick={closeMenu}>
+                รองเท้าฟุตซอล
+              </Link>
             </li>
             <li>
-              <Link to="/?category=รองเท้าวิ่ง">รองเท้าวิ่ง</Link>
+              <Link to="/?category=รองเท้าวิ่ง" onClick={closeMenu}>
+                รองเท้าวิ่ง
+              </Link>
             </li>
           </ul>
         </nav>
@@ -65,18 +87,27 @@ const Header = () => {
               {isSearchOpen ? <FiX size={22} /> : <FiSearch size={22} />}
             </button>
           </div>
+          {user && user.role === "admin" && (
+            <Link
+              to="/admin"
+              className="icon-btn admin-icon"
+              title="ระบบหลังบ้าน"
+            >
+              <FiSettings size={22} />
+            </Link>
+          )}
           <ProfileDropdown />
+          {user && ( // แสดงเฉพาะตอนล็อกอิน
+            <Link to="/orders" className="icon-btn" title="ประวัติการสั่งซื้อ">
+              <FiPackage size={22} />
+            </Link>
+          )}
           <Link to="/cart" className="cart-icon-wrapper">
             <FiShoppingCart size={22} />
             {totalQuantity > 0 && (
               <span className="cart-badge">{totalQuantity}</span>
             )}
           </Link>
-          {user && ( // แสดงเฉพาะตอนล็อกอิน
-            <Link to="/orders" className="icon-btn" title="ประวัติการสั่งซื้อ">
-              <FiPackage size={22} />
-            </Link>
-          )}
         </div>
       </div>
     </header>

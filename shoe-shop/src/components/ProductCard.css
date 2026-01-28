@@ -1,26 +1,27 @@
-
 .product-card {
-  background-color: #1e1e1e; 
+  background-color: #1e1e1e;
   border-radius: 12px;
-  overflow: hidden; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease-in-out;
-  height: 100%; 
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .product-card:hover {
-  transform: translateY(-5px); 
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(253, 224, 71, 0.2);
 }
 
+/* ส่วนรูปภาพ  */
 .product-image-container {
   position: relative;
   width: 100%;
-  padding-bottom: 100%; 
+  padding-bottom: 100%; /* Aspect Ratio 1:1 */
   overflow: hidden;
-  background-color: white; 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+  background-color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .product-image {
@@ -29,61 +30,102 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; 
-  padding: 10px; 
+  object-fit: contain; /* โชว์รองเท้าทั้งใบ ไม่โดนตัด */
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05); /* ซูมรูปนิดนึงตอนชี้ */
 }
 
 .sale-badge {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  background-color: var(--sale-color); 
+  top: 10px;
+  right: 10px;
+  background-color: var(--sale-color);
   color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
   font-weight: bold;
   z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* ส่วนรายละเอียดสินค้า */
 .product-info {
   padding: 15px;
-  text-align: left; 
-  flex-grow: 1; 
+  text-align: left;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; 
+  justify-content: space-between;
 }
 
 .product-brand {
-  font-size: 0.85rem;
-  color: var(--text-secondary-color); 
-  text-transform: uppercase; 
-  margin-bottom: 5px;
-  letter-spacing: 0.5px; 
+  font-size: 0.8rem;
+  color: var(--text-secondary-color);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 .product-name {
   font-size: 1.1rem;
-  color: var(--text-color); 
+  color: var(--text-color);
   font-weight: 500;
-  line-height: 1.3;
-  margin-bottom: 10px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; 
-  line-clamp: 2; 
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
+  min-height: 2.8em; /* กันความสูงกระโดดถ้ารูปชื่อสั้น */
 }
 
 .product-price {
-  font-size: 1.3rem;
-  color: var(--primary-color); 
+  font-size: 1.25rem;
+  color: var(--primary-color);
   font-weight: 700;
-  margin-top: auto; /* ดันราคาลงไปด้านล่างสุดของการ์ด */
+  margin-top: auto;
 }
+
 .product-card-link {
   text-decoration: none;
   color: inherit;
+  display: block;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .product-info {
+    padding: 10px;
+  }
+
+  .product-name {
+    font-size: 0.95rem;
+    line-height: 1.3;
+    min-height: 2.6em;
+    margin-bottom: 6px;
+  }
+
+  .product-brand {
+    font-size: 0.7rem;
+  }
+
+  .product-price {
+    font-size: 1.1rem;
+  }
+
+  .sale-badge {
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    top: 8px;
+    right: 8px;
+  }
 }

@@ -1,5 +1,5 @@
 .product-section-container {
-  position: relative; 
+  position: relative;
   width: 100%;
   padding: 2rem 0;
 }
@@ -9,11 +9,15 @@
   text-align: center;
   margin-bottom: 2rem;
   color: var(--text-color);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .product-swiper {
   position: relative;
   padding-bottom: 3rem !important;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .product-arrow-prev,
@@ -29,10 +33,11 @@
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 50%;
   transition: all 0.2s ease-in-out;
-  
+
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(4px);
 }
 
 .product-arrow-prev::after,
@@ -40,31 +45,41 @@
   font-size: 18px;
   font-weight: 600;
   color: white;
-  transition: all 0.2s ease-in-out;
 }
-
 .product-arrow-prev::after {
-  content: '<';
+  content: "<";
 }
-
 .product-arrow-next::after {
-  content: '>';
+  content: ">";
 }
-
 .product-arrow-next {
-  right: 15px;
+  right: 10px;
 }
-
 .product-arrow-prev {
-  left: 15px;
+  left: 10px;
 }
 
 .product-arrow-prev:hover,
 .product-arrow-next:hover {
-  background-color: rgba(0, 0, 0, 0.65);
-  transform: translateY(-50%) scale(1.08);
+  background-color: var(--primary-color);
+  color: #121212;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .product-swiper .swiper-pagination-bullet-active {
-  background-color: #f8ee36;
+  background-color: var(--primary-color);
+}
+@media (max-width: 768px) {
+  /* ซ่อนปุ่มกดบนมือถือ (ใช้ปัดนิ้วเอา) */
+  .product-arrow-prev,
+  .product-arrow-next {
+    display: none;
+  }
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .product-section-container {
+    padding: 1.5rem 0;
+  }
 }

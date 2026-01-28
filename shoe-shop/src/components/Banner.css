@@ -1,84 +1,111 @@
 .banner-section {
-    width: 100%;
-    margin: 20px 0; 
-    padding: 0 15px; 
-    box-sizing: border-box;
+  width: 100%;
+  margin: 20px 0;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .main-banner-swiper {
-    width: 100%;
-    aspect-ratio: 21 / 9;
-    overflow: hidden;
-    border-radius: 12px; 
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0;
 }
 
 .main-banner-swiper .swiper-slide img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 :root {
-    --swiper-theme-color: #007aff; 
-    --swiper-navigation-color: #ffffff;
-    --swiper-navigation-size: 44px; 
+  --swiper-theme-color: #fde047;
+  --swiper-navigation-color: #ffffff;
+  --swiper-navigation-size: 44px;
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-    width: var(--swiper-navigation-size);
-    height: var(--swiper-navigation-size);
-    background-color: rgba(0, 0, 0, 0.2); 
-    backdrop-filter: blur(4px); 
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-    right: 20px;
+  width: var(--swiper-navigation-size);
+  height: var(--swiper-navigation-size);
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
+.swiper-button-next {
+  right: 20px;
+}
 .swiper-button-prev {
-    left: 20px;
+  left: 20px;
 }
 
 .swiper-button-next::after,
 .swiper-button-prev::after {
-    font-size: 18px !important;
-    font-weight: 600;
-    color: var(--swiper-navigation-color);
-    transition: transform 0.3s ease;
+  font-size: 18px !important;
+  font-weight: 700;
+  color: var(--swiper-navigation-color);
 }
 
-/* --- เอฟเฟกต์ตอนเอาเมาส์ไปชี้ (Hover) --- */
+/* Hover Effects */
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-    background-color: rgba(0, 0, 0, 0.5); 
-    transform: scale(1.1); 
+  background-color: var(--swiper-theme-color);
+  border-color: var(--swiper-theme-color);
+  transform: scale(1.1);
 }
 
-/* เพิ่มอนิเมชั่นให้ลูกศรขยับเมื่อชี้ */
-.swiper-button-next:hover::after {
-    transform: translateX(3px);
-}
-
+.swiper-button-next:hover::after,
 .swiper-button-prev:hover::after {
-    transform: translateX(-3px);
+  color: #121212;
 }
 
-
-/*สไตล์ของจุดบอกหน้าสไลด์ (Pagination) --- */
+/* Pagination Dots */
 .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.5);
-    opacity: 0.8;
-    transition: all 0.3s ease;
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .swiper-pagination-bullet-active {
-    width: 24px; 
-    border-radius: 5px;
-    background-color: var(--swiper-theme-color);
-    opacity: 1;
+  width: 24px;
+  border-radius: 4px;
+  background-color: var(--swiper-theme-color);
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .banner-section {
+    padding: 0 10px;
+    margin: 15px 0;
+  }
+
+  .main-banner-swiper {
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none !important;
+  }
+
+  .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 18px;
+  }
 }

@@ -1,0 +1,250 @@
+.admin-container {
+  padding: 2rem;
+  min-height: 80vh;
+  background-color: #121212;
+  color: #fff;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  font-size: 1.8rem;
+  color: var(--primary-color, #fde047);
+  margin: 0;
+}
+
+.btn-add-new {
+  background-color: var(--primary-color, #fde047);
+  color: #121212;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-add-new:hover {
+  transform: translateY(-2px);
+}
+
+/* ตารางพื้นฐาน */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.admin-table thead {
+  background-color: #252525;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.admin-table th {
+  color: #aaa;
+  font-weight: 600;
+}
+
+.product-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* ปุ่ม Action */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-btn-edit,
+.admin-btn-delete {
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+.admin-btn-edit {
+  background-color: #3b82f6;
+}
+.admin-btn-delete {
+  background-color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 10px;
+  }
+
+  /* Header */
+  .admin-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+    text-align: center;
+  }
+  .btn-add-new {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* เปลี่ยนตารางเป็น Block ให้หมด */
+  .admin-table,
+  .admin-table thead,
+  .admin-table th,
+  .admin-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .admin-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  /* สไตล์การ์ดสินค้า */
+  .admin-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+    /* แยกเลเยอร์การ์ดออกจากกันอย่างเด็ดขาด */
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+  }
+  .admin-table td {
+    border-bottom: none;
+  }
+
+  /* ID (ซ่อน) */
+  .admin-table td:nth-of-type(1) {
+    display: none;
+  }
+
+  /* รูปภาพ */
+  .admin-table td:nth-of-type(2) {
+    text-align: center;
+    padding: 0 0 15px 0;
+  }
+  .product-thumbnail {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  /* ชื่อสินค้า */
+  .admin-table td:nth-of-type(3) {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    padding: 5px 0;
+    text-align: left;
+  }
+
+  /* หมวดหมู่ */
+  .admin-table td:nth-of-type(4) {
+    padding: 5px 0;
+  }
+  .badge-category {
+    background: #333;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #ccc;
+    display: inline-block;
+  }
+
+  /* ราคา */
+  .admin-table td:nth-of-type(5) {
+    padding: 10px 0;
+    font-size: 1.2rem;
+    color: var(--primary-color, #fde047);
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .admin-table td:nth-of-type(5)::before {
+    content: "ราคา:";
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: normal;
+  }
+
+  /* สต็อก */
+  .admin-table td:nth-of-type(6) {
+    padding: 5px 0 15px 0;
+    color: #ccc;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+  }
+  .admin-table td:nth-of-type(6)::before {
+    content: "สต็อกคงเหลือ:";
+    color: #888;
+  }
+
+  /* ปุ่ม Action */
+  .admin-table td:nth-of-type(7) {
+    padding: 15px 0 0 0;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+
+    position: relative;
+    z-index: 100;
+  }
+
+  .admin-btn-edit,
+  .admin-btn-delete {
+    flex: 1;
+    height: 45px;
+    font-size: 1rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 999;
+    cursor: pointer;
+  }
+}

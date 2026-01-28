@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import Banner from "../components/Banner";
 import Badges from "../components/Badges";
 import ProductSection from "../components/ProductSection";
+import ProductCard from "../components/ProductCard";
+import "./Home.css";
 
 const Home = () => {
   const { user } = useAuth();
@@ -18,7 +20,6 @@ const Home = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        // ส่ง query string (search) ไปที่ Backend เพื่อกรองข้อมูล
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/products${search}`,
         );
@@ -32,7 +33,7 @@ const Home = () => {
     };
 
     fetchProducts();
-  }, [search]); // โหลดข้อมูลใหม่ทุกครั้งที่ URL เปลี่ยนแปลง
+  }, [search]);
 
   const newArrivals = [...allProducts]
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -44,66 +45,66 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div
-        className="container"
-        style={{ padding: "3rem 0", textAlign: "center" }}
-      >
+      <div className="loading-container">
+        <div className="spinner"></div>
         <h2>กำลังโหลดข้อมูลสินค้า...</h2>
       </div>
     );
   }
 
   return (
-    <>
-      {/* ซ่อน Banner และ Badges เมื่อมีการค้นหาหรือกรองหมวดหมู่ */}
+    <div className="home-page">
       {!search && (
         <>
           <Banner />
-          <Badges />
+
+          <div className="container badges-wrapper">
+            <Badges />
+          </div>
         </>
       )}
 
       {user && user.role === "admin" && (
-        <div
-          className="admin-controls container"
-          style={{ marginTop: search ? "2rem" : "0" }}
-        >
+        <div className="container admin-controls-wrapper">
           <Link to="/admin/add-product" className="add-product-btn">
             + เพิ่มสินค้าใหม่
           </Link>
         </div>
       )}
 
-      {/* --- ส่วนแสดงผลเมื่อมีการ Filter (Search หรือ Category) --- */}
+      {/* ส่วนแสดงผล: ผลการค้นหา GRID VIEW*/}
       {search ? (
-        <div className="search-results-container">
+        <div className="container search-results-section">
+          <h2 className="section-title">
+            {searchTerm
+              ? `ผลการค้นหาสำหรับ "${searchTerm}"`
+              : `หมวดหมู่: ${categoryTerm}`}
+          </h2>
+
           {allProducts.length > 0 ? (
-            <ProductSection
-              // ปรับหัวข้อตามสิ่งที่ผู้ใช้เลือกค้นหา
-              title={
-                searchTerm
-                  ? `ผลการค้นหาสำหรับ "${searchTerm}"`
-                  : `หมวดหมู่: ${categoryTerm}`
-              }
-              products={allProducts}
-            />
+            <div className="product-grid-view">
+              {allProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           ) : (
-            <div
-              className="container"
-              style={{ padding: "5rem 0", textAlign: "center" }}
-            >
-              <h2>ไม่พบสินค้าในหมวดหมู่ "{categoryTerm || searchTerm}"</h2>
+            <div className="no-results">
+              <h2>ไม่พบสินค้า</h2>
               <p>ลองค้นหาด้วยคำอื่น หรือเลือกดูหมวดหมู่ด้านบนอีกครั้งครับ</p>
+              <Link to="/" className="btn-back-home">
+                กลับหน้าหลัก
+              </Link>
             </div>
           )}
         </div>
       ) : (
+        /* ส่วนแสดงผล: หน้าแรกปกติ SWIPER VIEW */
         <>
           <ProductSection title="สินค้ามาใหม่" products={newArrivals} />
           <ProductSection title="สินค้ายอดฮิต" products={bestSellers} />
         </>
       )}
-    </>
+    </div>
   );
 };
 

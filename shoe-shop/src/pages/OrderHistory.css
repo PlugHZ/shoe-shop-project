@@ -1,70 +1,240 @@
 .order-history-container {
-  padding: 2rem 0;
+  padding: 3rem 0;
   min-height: 80vh;
 }
+
+.order-history-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+/* กรณีไม่มีคำสั่งซื้อ */
+.no-orders {
+  text-align: center;
+  padding: 4rem 1rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  border: 1px dashed #444;
+}
+
+.no-orders p {
+  color: #aaa;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-shop-now {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background-color: var(--primary-color);
+  color: #121212;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: transform 0.2s;
+}
+
+.btn-shop-now:hover {
+  transform: translateY(-2px);
+}
+
+/* Order Card Design  */
 .order-card {
   background: #1e1e1e;
   border: 1px solid #333;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
 }
+
+.order-card:hover {
+  border-color: #555;
+  transform: translateY(-2px);
+}
+
+/* Header วันที่ + สถานะ */
 .order-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  background-color: #252525;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid #333;
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
 }
+
+.order-meta h3 {
+  margin: 0 0 0.3rem 0;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
 .order-date {
   color: #888;
-  font-size: 0.9rem;
-}
-.order-status {
-  padding: 4px 12px;
-  border-radius: 20px;
   font-size: 0.85rem;
+  display: block;
+}
+
+/* Status Badges */
+.order-status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
+
 .status-pending {
-  background: #ffcc00;
-  color: #000;
+  background: rgba(253, 224, 71, 0.2);
+  color: #fde047;
+  border: 1px solid #fde047;
 }
+
+.status-shipped,
+.status-completed {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  border: 1px solid #4ade80;
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+/* Order Items List */
+.order-items {
+  padding: 1.5rem;
+}
+
 .order-item {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #2a2a2a;
 }
-.order-item img {
-  width: 60px;
-  height: 60px;
+
+.order-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.order-item-img {
+  width: 70px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 4px;
-  margin-right: 1rem;
+  border-radius: 8px;
+  background-color: white;
+  margin-right: 1.2rem;
+  border: 1px solid #333;
 }
+
+.item-details {
+  flex-grow: 1;
+}
+
 .item-details h4 {
-  margin: 0 0 0.3rem 0;
+  margin: 0 0 0.4rem 0;
   color: #fff;
   font-size: 1rem;
+  line-height: 1.4;
 }
+
 .item-details p {
   margin: 0;
   color: #aaa;
   font-size: 0.9rem;
 }
+
 .item-price {
-  margin-left: auto;
   font-weight: bold;
   color: #fff;
+  font-size: 1.1rem;
+  white-space: nowrap;
 }
+
+/* Footer ยอดรวม */
 .order-footer {
+  background-color: #252525;
+  padding: 1rem 1.5rem;
   border-top: 1px solid #333;
-  padding-top: 1rem;
   display: flex;
   justify-content: space-between;
-  font-size: 1.2rem;
-  font-weight: bold;
+  align-items: center;
+  font-size: 1.1rem;
 }
+
+.order-footer span:first-child {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
 .total-price {
   color: var(--primary-color, #ffcc00);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .order-history-container {
+    padding: 1.5rem 0;
+  }
+
+  .order-history-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .order-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 1.5rem;
+    padding: 0;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .order-status {
+    align-self: flex-start; /* ชิดซ้าย */
+  }
+
+  .order-items {
+    padding: 1rem;
+  }
+
+  .order-item {
+    align-items: flex-start;
+  }
+
+  .order-item-img {
+    width: 60px;
+    height: 60px;
+    margin-right: 1rem;
+  }
+
+  .item-details h4 {
+    font-size: 0.95rem;
+  }
+
+  .item-price {
+    font-size: 1rem;
+    align-self: flex-start; /* ให้ราคาอยู่ตรงกับชื่อสินค้า */
+  }
+
+  .order-footer {
+    padding: 1rem;
+  }
 }

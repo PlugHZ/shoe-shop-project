@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; 
-import { FaTrashAlt } from 'react-icons/fa';
-import './Cart.css'; //
+import React from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { FaTrashAlt } from "react-icons/fa";
+import "./Cart.css"; //
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal, loadingCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, cartTotal, loadingCart } =
+    useCart();
 
   // แสดงผลตอนกำลังโหลดข้อมูลตะกร้า
   if (loadingCart) {
@@ -25,26 +26,47 @@ const Cart = () => {
           {cartItems.length === 0 ? (
             <p>ตะกร้าสินค้าของคุณว่างเปล่า</p>
           ) : (
-            cartItems.map(item => (
+            cartItems.map((item) => (
               //เปลี่ยน key ให้ใช้ item.id (ซึ่งตอนนี้คือ ID จากตาราง cart_items)
               <div key={item.id} className="cart-item">
                 <div className="item-image">
                   {/*ตรวจสอบ images ก่อนใช้ (เพราะมาจาก DB อาจเป็น null) */}
-                  {/* (เราแปลง image_urls -> images ใน Context แล้ว [previous step]) */}
-                  <img src={item.images?.[0] || '/images/placeholder.png'} alt={item.name} />
+                  {/* (เราแปลง image_urls ไป images ใน Context แล้ว [previous step]) */}
+                  <img
+                    src={item.images?.[0] || "/images/placeholder.png"}
+                    alt={item.name}
+                  />
                 </div>
                 <div className="item-details">
                   <p className="item-name">{item.name}</p>
                   <p className="item-size">Size: {item.size}</p>
-                  <p className="item-price">{item.price.toLocaleString()} THB</p>
+                  <p className="item-price">
+                    {item.price.toLocaleString()} THB
+                  </p>
                 </div>
                 <div className="item-quantity">
-                  <input
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) => updateQuantity(item.id, e.target.value)}
-                    min="1"
-                  />
+                  <div className="quantity-controls-cart">
+                    <button
+                      onClick={() =>
+                        updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                      }
+                      disabled={item.quantity <= 1}
+                    >
+                      -
+                    </button>
+
+                    <input
+                      type="number"
+                      value={item.quantity}
+                      readOnly /* บังคับให้กดปุ่มเอา */
+                    />
+
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
                 <div className="item-total">
                   {(item.price * item.quantity).toLocaleString()} THB
