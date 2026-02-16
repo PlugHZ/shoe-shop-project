@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import QRCode from "react-qr-code";
+import generatePayload from "promptpay-qr";
 import "./Checkout.css";
 
 const Checkout = () => {
@@ -14,59 +16,85 @@ const Checkout = () => {
     address: "",
     phone: "",
   });
+  const [paymentMethod, setPaymentMethod] = useState("transfer");
+
+  const [slipFile, setSlipFile] = useState(null);
+  const [slipPreview, setSlipPreview] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
+  const PROMPTPAY_ID = import.meta.env.VITE_PROMPTPAY_NUMBER;
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSlipFile(file);
+
+      // สร้าง URL สำหรับแสดงรูปตัวอย่าง
+      const objectUrl = URL.createObjectURL(file);
+      setSlipPreview(objectUrl);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (slipPreview) URL.revokeObjectURL(slipPreview);
+    };
+  }, [slipPreview]);
 
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
+    if (paymentMethod === "transfer" && !slipFile) {
+      alert("กรุณาแนบสลิปการโอนเงิน");
+      return;
+    }
     setLoading(true);
 
-    const orderData = {
-      user_id: user ? user.id : null,
-      customer_name: formData.name,
-      shipping_address: formData.address,
-      phone: formData.phone,
-      total_price: cartTotal,
-      items: cartItems.map((item) => ({
-        product_id: item.product_id,
-        quantity: item.quantity,
-        size: item.size,
-        price_at_purchase: item.price,
-        image: item.images?.[0] || null,
-      })),
-    };
-
     try {
+      const data = new FormData();
+      data.append("user_id", user ? user.id : null);
+      data.append("customer_name", formData.name);
+      data.append("shipping_address", formData.address);
+      data.append("phone", formData.phone);
+      data.append("total_price", cartTotal);
+      data.append("payment_method", paymentMethod);
+      data.append(
+        "items",
+        JSON.stringify(
+          cartItems.map((item) => ({
+            product_id: item.product_id,
+            quantity: item.quantity,
+            size: item.size,
+            price_at_purchase: item.price,
+            image: item.images?.[0] || null,
+          })),
+        ),
+      );
+
+      if (slipFile) {
+        data.append("slip_image", slipFile);
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/orders`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData),
+          body: data,
         },
       );
+
       const resData = await response.json();
-      if (!response.ok) {
-        throw new Error(resData.error || "Failed to place order");
-      }
+      if (!response.ok) throw new Error(resData.error || "Failed");
 
-      if (user) {
-        await fetchCart();
-      }
+      if (user) await fetchCart();
 
-      navigate("/order-success", {
-        state: { orderId: resData.orderId || resData.insertId },
-      });
+      navigate("/order-success", { state: { orderId: resData.orderId } });
     } catch (err) {
-      console.error("Error placing order:", err);
-      alert(`เกิดข้อผิดพลาด: ${err.message}`);
+      alert("Error: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -74,15 +102,12 @@ const Checkout = () => {
 
   return (
     <div className="checkout-container container">
-      <h1>ข้อมูลการจัดส่ง</h1>
+      <h1>ชำระเงิน</h1>
       <div className="checkout-layout">
         <form className="shipping-form" onSubmit={handleSubmitOrder}>
-          <h2>ที่อยู่สำหรับจัดส่ง</h2>
           <div className="form-group">
-            <label htmlFor="name">ชื่อ-นามสกุล</label>
+            <label>ชื่อ-นามสกุล</label>
             <input
-              type="text"
-              id="name"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
@@ -90,9 +115,8 @@ const Checkout = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="address">ที่อยู่</label>
+            <label>ที่อยู่</label>
             <textarea
-              id="address"
               name="address"
               value={formData.address}
               onChange={handleInputChange}
@@ -100,10 +124,8 @@ const Checkout = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="phone">เบอร์โทรศัพท์</label>
+            <label>เบอร์โทร</label>
             <input
-              type="tel"
-              id="phone"
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
@@ -111,12 +133,119 @@ const Checkout = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="place-order-btn"
-            disabled={loading || cartItems.length === 0}
+          <div
+            className="payment-section"
+            style={{
+              marginTop: "20px",
+              borderTop: "1px solid #444",
+              paddingTop: "20px",
+            }}
           >
-            {loading ? "กำลังดำเนินการ..." : "ยืนยันคำสั่งซื้อ"}
+            <h3 style={{ color: "white" }}>วิธีการชำระเงิน</h3>
+            <div
+              style={{
+                display: "flex",
+                gap: "15px",
+                margin: "10px 0",
+                color: "white",
+              }}
+            >
+              <label style={{ cursor: "pointer" }}>
+                <input
+                  type="radio"
+                  value="transfer"
+                  checked={paymentMethod === "transfer"}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />{" "}
+                โอนเงิน (QR)
+              </label>
+              <label style={{ cursor: "pointer" }}>
+                <input
+                  type="radio"
+                  value="cod"
+                  checked={paymentMethod === "cod"}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />{" "}
+                เก็บเงินปลายทาง
+              </label>
+            </div>
+
+            {paymentMethod === "transfer" && (
+              <div
+                style={{
+                  background: "white",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  color: "black",
+                }}
+              >
+                <div
+                  style={{
+                    height: "auto",
+                    margin: "0 auto",
+                    maxWidth: 200,
+                    width: "100%",
+                  }}
+                >
+                  <QRCode
+                    size={256}
+                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    value={generatePayload(PROMPTPAY_ID, { amount: cartTotal })}
+                    viewBox={`0 0 256 256`}
+                  />
+                </div>
+                <p style={{ fontWeight: "bold", marginTop: "10px" }}>
+                  ยอดโอน {cartTotal.toLocaleString()} บาท
+                </p>
+
+                <div style={{ marginTop: "15px", textAlign: "left" }}>
+                  <label style={{ fontWeight: "bold" }}>แนบสลิป:</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    required
+                  />
+                </div>
+
+                {slipPreview && (
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      textAlign: "center",
+                      border: "2px dashed #ccc",
+                      padding: "10px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "0.8rem",
+                        color: "#666",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      ตัวอย่างสลิปที่แนบ:
+                    </p>
+                    <img
+                      src={slipPreview}
+                      alt="Slip Preview"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "250px",
+                        borderRadius: "5px",
+                        boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <button type="submit" className="place-order-btn" disabled={loading}>
+            {loading ? "กำลังบันทึก..." : "ยืนยันคำสั่งซื้อ"}
           </button>
         </form>
 

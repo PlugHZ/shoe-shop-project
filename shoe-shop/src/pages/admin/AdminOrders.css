@@ -184,3 +184,8 @@
     border-top: 1px dashed #333;
   }
 }
+.status-paid {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #34d399;
+}
