@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -17,13 +17,22 @@ const Checkout = () => {
     phone: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("transfer");
-
   const [slipFile, setSlipFile] = useState(null);
   const [slipPreview, setSlipPreview] = useState(null);
-
   const [loading, setLoading] = useState(false);
 
-  const PROMPTPAY_ID = import.meta.env.VITE_PROMPTPAY_NUMBER;
+  const PROMPTPAY_ID = import.meta.env.VITE_PROMPTPAY_NUMBER || "";
+
+  const qrPayload = useMemo(() => {
+    if (!PROMPTPAY_ID || cartTotal <= 0) return "";
+    try {
+      const cleanId = PROMPTPAY_ID.replace(/-/g, "");
+      return generatePayload(cleanId, { amount: Number(cartTotal) });
+    } catch (err) {
+      console.error("QR Gen Error:", err);
+      return "";
+    }
+  }, [PROMPTPAY_ID, cartTotal]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,8 +42,6 @@ const Checkout = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSlipFile(file);
-
-      // สร้าง URL สำหรับแสดงรูปตัวอย่าง
       const objectUrl = URL.createObjectURL(file);
       setSlipPreview(objectUrl);
     }
@@ -88,13 +95,15 @@ const Checkout = () => {
       );
 
       const resData = await response.json();
-      if (!response.ok) throw new Error(resData.error || "Failed");
+
+      if (!response.ok) {
+        throw new Error(resData.error || "เกิดข้อผิดพลาดในการสั่งซื้อ");
+      }
 
       if (user) await fetchCart();
-
       navigate("/order-success", { state: { orderId: resData.orderId } });
     } catch (err) {
-      alert("Error: " + err.message);
+      alert("❌ ไม่สามารถสั่งซื้อได้: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -188,12 +197,22 @@ const Checkout = () => {
                     width: "100%",
                   }}
                 >
-                  <QRCode
-                    size={256}
-                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                    value={generatePayload(PROMPTPAY_ID, { amount: cartTotal })}
-                    viewBox={`0 0 256 256`}
-                  />
+                  {qrPayload ? (
+                    <QRCode
+                      size={256}
+                      style={{
+                        height: "auto",
+                        maxWidth: "100%",
+                        width: "100%",
+                      }}
+                      value={qrPayload}
+                      viewBox={`0 0 256 256`}
+                    />
+                  ) : (
+                    <p style={{ color: "red" }}>
+                      ไม่พบข้อมูล PromptPay หรือยอดเงิน
+                    </p>
+                  )}
                 </div>
                 <p style={{ fontWeight: "bold", marginTop: "10px" }}>
                   ยอดโอน {cartTotal.toLocaleString()} บาท
@@ -226,7 +245,7 @@ const Checkout = () => {
                         marginBottom: "5px",
                       }}
                     >
-                      ตัวอย่างสลิปที่แนบ:
+                      ตัวอย่างสลิป:
                     </p>
                     <img
                       src={slipPreview}
@@ -235,7 +254,6 @@ const Checkout = () => {
                         maxWidth: "100%",
                         maxHeight: "250px",
                         borderRadius: "5px",
-                        boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
                       }}
                     />
                   </div>
